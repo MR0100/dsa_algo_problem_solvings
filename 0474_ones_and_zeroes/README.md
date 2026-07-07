@@ -57,7 +57,7 @@ Explanation: The largest subset is {"0", "1"}, so the answer is 2.
 
 ## DSA Concepts Used
 
-- **0/1 Knapsack (two capacities)** — each string is an item taken at most once; its "weight" is the pair (zeros, ones) and its "value" is 1. Maximise count under two independent capacity limits → see [`/dsa/dynamic_programming_2d.md`](/dsa/dynamic_programming_2d.md)
+- **0/1 Knapsack (two capacities)** — each string is an item taken at most once; its "weight" is the pair (zeros, ones) and its "value" is 1. Maximise count under two independent capacity limits → see [`/dsa/knapsack.md`](/dsa/knapsack.md)
 - **Rolling-array DP** — the item dimension collapses to a single 2D table swept downward, the hallmark trick for keeping 0/1 knapsack at `O(capacity)` space → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
 
 ---

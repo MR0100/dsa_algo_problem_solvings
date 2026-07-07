@@ -65,8 +65,7 @@ Output: 2
 ## DSA Concepts Used
 
 - **Math / Number Theory** — the answer is a pure information-theoretic count: each pig is a base-`(rounds+1)` digit, and we need the smallest `p` with `(rounds+1)^p ≥ buckets`, i.e. `ceil(log_base(buckets))` → see [`/dsa/math_number_theory.md`](/dsa/math_number_theory.md)
-
-> Note: the counting/encoding argument here (each pig = one independent radix digit, `states^pigs` distinguishable outcomes) is a **combinatorics / information-theory** idea. No dedicated `/dsa/combinatorics.md` file exists yet — see "NEW /dsa CONCEPTS NEEDED" in the batch report.
+- **Combinatorics / Counting** — each pig is one independent radix digit, so `states^pigs` distinguishable outcomes; finding the fewest pigs is a pure counting / information-theory argument → see [`/dsa/combinatorics.md`](/dsa/combinatorics.md)
 
 ---
 

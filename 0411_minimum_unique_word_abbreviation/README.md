@@ -73,7 +73,7 @@ There may be multiple valid answers such as "ap3", "a3e", "2p2", "3le", "3l1".
 - **Bit Manipulation (diff-masks & the `keep & diff` test)** — encode each same-length dictionary word as a bitmask of positions where it differs from `target`; a set of kept letters (also a bitmask) makes the abbreviation unique against that word iff their AND is non-zero → see [`/dsa/bit_manipulation.md`](/dsa/bit_manipulation.md)
 - **Backtracking** — Approach 2 builds the abbreviation position-by-position (skip a run as a number, or keep the next letter), pruning branches that cannot beat the best length → see [`/dsa/backtracking.md`](/dsa/backtracking.md)
 - **String manipulation** — rendering a kept-positions mask back into an abbreviation string (letters + run-length numbers) → see [`/dsa/string_algorithms.md`](/dsa/string_algorithms.md)
-- **Bitmask subset enumeration** — Approach 1 iterates all `2^m` subsets of kept positions; the constraint `log2(n)+m ≤ 21` is precisely what keeps this exponential search feasible. *(No dedicated `/dsa` file yet — closest is bit manipulation.)*
+- **Bitmask subset enumeration** — Approach 1 iterates all `2^m` subsets of kept positions; the constraint `log2(n)+m ≤ 21` is precisely what keeps this exponential search feasible → see [`/dsa/bitmask.md`](/dsa/bitmask.md)
 
 ---
 

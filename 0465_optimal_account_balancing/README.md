@@ -63,7 +63,7 @@ Therefore, person #1 only need to give person #0 $4, and all debt is settled.
 ## DSA Concepts Used
 
 - **Backtracking / DFS** — after netting balances, recursively settle the first non-zero debt against each later opposite-sign debt, branching over choices and taking the minimum transaction count → see [`/dsa/backtracking.md`](/dsa/backtracking.md)
-- **Bitmask Subset-Sum DP** — reframed as "partition the non-zero balances into the maximum number of disjoint zero-sum groups"; enumerate subsets with a bitmask, and the answer is `n − (max groups)` → see [`/dsa/bit_manipulation.md`](/dsa/bit_manipulation.md)
+- **Bitmask Subset-Sum DP** — reframed as "partition the non-zero balances into the maximum number of disjoint zero-sum groups"; enumerate subsets with a bitmask, and the answer is `n − (max groups)` → see [`/dsa/bitmask.md`](/dsa/bitmask.md)
 - **Hashing to net balances** — collapse the raw transactions into per-person net amounts (a map), discarding who-paid-whom, before any search → see [`/dsa/hash_map.md`](/dsa/hash_map.md)
 
 ---

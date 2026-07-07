@@ -47,7 +47,7 @@ Output: 1
 
 ## DSA Concepts Used
 
-- **Combinatorics / Counting** — the answer is a product of shrinking digit choices (9 · 9 · 8 · …), counted per digit length → see [`/dsa/math_number_theory.md`](/dsa/math_number_theory.md)
+- **Combinatorics / Counting** — the answer is a product of shrinking digit choices (9 · 9 · 8 · …), counted per digit length → see [`/dsa/combinatorics.md`](/dsa/combinatorics.md)
 - **Dynamic Programming (build-up)** — each length's count derives from the previous by one multiplication → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
 - **Backtracking** — DFS constructs every unique-digit number with a `used[]` mask, counting valid prefixes → see [`/dsa/backtracking.md`](/dsa/backtracking.md)
 

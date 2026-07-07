@@ -55,7 +55,7 @@ Output: 4
 ## DSA Concepts Used
 
 - **Bit Manipulation** — Hamming distance is `popcount(x ^ y)`, and the optimal solution decomposes the total into independent per-bit-column contributions → see [`/dsa/bit_manipulation.md`](/dsa/bit_manipulation.md)
-- **Counting / Combinatorics** — the trick is *swap the order of summation*: for each bit column, the number of differing pairs is `ones × zeros`, a pure counting argument on the array values → see [`/dsa/arrays.md`](/dsa/arrays.md)
+- **Counting / Combinatorics** — the trick is *swap the order of summation*: for each bit column, the number of differing pairs is `ones × zeros`, a pure counting argument on the array values → see [`/dsa/combinatorics.md`](/dsa/combinatorics.md)
 
 ---
 

@@ -62,7 +62,7 @@ Output: 1
 ## DSA Concepts Used
 
 - **Backtracking (binary sign choice)** — the brute force explores a `2ⁿ` decision tree, choosing `+` or `−` at each index → see [`/dsa/backtracking.md`](/dsa/backtracking.md)
-- **1-D Dynamic Programming (subset-sum / 0-1 knapsack count)** — the algebraic reduction `P = (total+target)/2` turns the task into "count subsets that sum to `P`", solved with a downward-iterated 1-D DP array → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
+- **1-D Dynamic Programming (subset-sum / 0-1 knapsack count)** — the algebraic reduction `P = (total+target)/2` turns the task into "count subsets that sum to `P`", solved with a downward-iterated 1-D DP array → see [`/dsa/knapsack.md`](/dsa/knapsack.md)
 
 ---
 

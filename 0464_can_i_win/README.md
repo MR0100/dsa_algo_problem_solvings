@@ -67,7 +67,7 @@ Output: true
 ## DSA Concepts Used
 
 - **Game Theory (Minimax)** — a two-player, perfect-information, zero-sum game: a position is a win iff *some* move leaves the opponent in a losing position. This win/lose recursion is the whole solution → see [`/dsa/game_theory.md`](/dsa/game_theory.md)
-- **Bit Manipulation (bitmask state)** — the set of still-available numbers (max ≤ 20) is encoded as a 20-bit integer; bit `i` set ⇒ number `i+1` is used. The mask is both the memo key and the branching state → see [`/dsa/bit_manipulation.md`](/dsa/bit_manipulation.md)
+- **Bit Manipulation (bitmask state)** — the set of still-available numbers (max ≤ 20) is encoded as a 20-bit integer; bit `i` set ⇒ number `i+1` is used. The mask is both the memo key and the branching state → see [`/dsa/bitmask.md`](/dsa/bitmask.md)
 - **Memoization / DP over subsets** — the outcome depends only on which numbers remain (order-independent), so each of the `2^max` masks is solved once and cached → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
 
 ---

@@ -63,7 +63,7 @@ Output: [3,8,10]
 
 ## DSA Concepts Used
 
-- **Rejection sampling / uniform generation via modular reduction** — build a larger uniform range from a smaller one (7 → 49), keep the largest multiple of the target (40), reject the rest to stay exactly uniform, then reduce mod 10; the correctness argument is pure modular arithmetic and probability → see [`/dsa/math_number_theory.md`](/dsa/math_number_theory.md)
+- **Rejection sampling / uniform generation via modular reduction** — build a larger uniform range from a smaller one (7 → 49), keep the largest multiple of the target (40), reject the rest to stay exactly uniform, then reduce mod 10; the correctness argument is pure modular arithmetic and probability → see [`/dsa/rejection_sampling.md`](/dsa/rejection_sampling.md)
 
 ---
 

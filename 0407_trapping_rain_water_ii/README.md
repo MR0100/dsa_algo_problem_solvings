@@ -54,7 +54,7 @@ Output: 10
 ## DSA Concepts Used
 
 - **Heap / Priority Queue** — the optimal method always pours over the *lowest wall on the current frontier*; a min-heap keyed on cell height delivers that minimum in O(log(mn)) → see [`/dsa/heap_priority_queue.md`](/dsa/heap_priority_queue.md)
-- **BFS from the boundary (Dijkstra-like)** — we grow an inward frontier from the border, settling each cell the first time it is reached through its minimal enclosing rim — Dijkstra's shortest-bottleneck logic on a grid → see [`/dsa/graph_bfs_dfs.md`](/dsa/graph_bfs_dfs.md)
+- **BFS from the boundary (Dijkstra-like)** — we grow an inward frontier from the border, settling each cell the first time it is reached through its minimal enclosing rim — Dijkstra's shortest-bottleneck logic on a grid → see [`/dsa/dijkstra.md`](/dsa/dijkstra.md)
 - **Matrix traversal** — 4-directional neighbour expansion with border seeding on an `m x n` grid → see [`/dsa/matrix_traversal.md`](/dsa/matrix_traversal.md)
 
 ---

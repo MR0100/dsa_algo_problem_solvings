@@ -74,7 +74,7 @@ Output: "dldr"
 
 ## DSA Concepts Used
 
-- **Graph BFS / DFS & Grid Traversal** — the maze is a graph whose nodes are cells and whose edges are "roll until you stop"; the `roll` primitive is a grid-traversal walk that respects walls, borders, and the mid-roll hole → see [`/dsa/graph_bfs_dfs.md`](/dsa/graph_bfs_dfs.md)
+- **Dijkstra (weighted shortest path)** — the maze is a *weighted* graph whose nodes are cells and whose edges are "roll until you stop" (edge weight = roll length); Dijkstra settles the shortest, lexicographically-smallest path to the hole. The `roll` primitive is the grid-traversal walk that respects walls, borders, and the mid-roll hole → see [`/dsa/dijkstra.md`](/dsa/dijkstra.md)
 - **Heap / Priority Queue** — Dijkstra needs a min-heap ordered by `(distance, path)` so the first extraction of the hole is simultaneously shortest and lexicographically smallest → see [`/dsa/heap_priority_queue.md`](/dsa/heap_priority_queue.md)
 
 > Note: this is a **Dijkstra shortest-path** problem (roll edges have *unequal*

@@ -40,7 +40,7 @@ All checks pass across the full 400-problem range:
 
 ## `/dsa/` reference library
 
-**44 concept files** present, all substantive; every README link across #0001–#0500 resolves (0 broken links). (`combinatorics.md` added for #0458 Poor Pigs et al.)
+**48 concept files** present, all substantive; every README link across #0001–#0500 resolves (0 broken links). A full concept-link QA (2026-07-07) added 5 files — `combinatorics`, `dijkstra`, `knapsack`, `bitmask`, `rejection_sampling` — and repointed the bullets that were previously folded into a less-specific file (e.g. Dijkstra→`graph_bfs_dfs`, bitmask DP→`bit_manipulation`, rejection sampling→`reservoir_sampling`, 0/1-knapsack→generic DP, combinatorics→`math`/`arrays`). Verified 0 mismatches across all 500 READMEs.
 
 A concept-link audit (2026-07-07) found many bullets linked to a "closest" file rather than the right one, and repaired them: every "DSA Concepts Used" bullet now points to the semantically correct file. **12 new concept files** were authored (Go-first, full worked examples) and their bullets repointed:
 `arrays`, `geometry`, `line_sweep`, `boyer_moore_voting`, `counting_sort`,
@@ -53,5 +53,5 @@ Also repointed to existing files: Manacher's → `string_algorithms`, Monotonic 
 ## Remaining work
 
 - **#0501 onward — not yet started.** Next problem to solve is **#0501 (Find Mode in Binary Search Tree)**.
-- **Optional new `/dsa` concept files** flagged so far (currently linked to the nearest correct existing file — not broken; candidate future additions): `dijkstra` (#499, folded into `graph_bfs_dfs`+`heap_priority_queue`), `rejection_sampling` (#470/#478, folded into `math_number_theory`/`reservoir_sampling`), `knapsack` (#416/#473/#474), `bitmask_enumeration` (#411), `simulation` (#418), `quad_tree` (#427), `n_ary_tree` (#428/#429).
+- **Optional `/dsa` concept files** still candidates (currently linked to the nearest correct existing file — not broken): `simulation` (#418), `quad_tree` (#427), `n_ary_tree` (#428/#429), `coordinate_compression` (#493). Low-value/niche; deferred.
 - **Optional:** author dedicated `/dsa/` pages for the concepts listed above and repoint the links (currently they resolve to the nearest existing file, so this is a polish item, not a defect).

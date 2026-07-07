@@ -56,7 +56,7 @@ solution.randPoint();  // return [0.36572, 0.17248]
 ## DSA Concepts Used
 
 - **Geometry / Uniform Sampling in 2-D** — the crux is that area in polar form is `r·dr·dθ`, so uniform *radius* is not uniform *area*; you must transform with `r = R·√u` → see [`/dsa/geometry.md`](/dsa/geometry.md)
-- **Randomized Algorithms / Rejection Sampling** — the bounding-square method conditions a uniform square draw on the disk, a canonical rejection-sampling technique → see [`/dsa/reservoir_sampling.md`](/dsa/reservoir_sampling.md)
+- **Randomized Algorithms / Rejection Sampling** — the bounding-square method conditions a uniform square draw on the disk, a canonical rejection-sampling technique → see [`/dsa/rejection_sampling.md`](/dsa/rejection_sampling.md)
 - **Math (inverse-transform sampling)** — invert the area CDF `(r/R)² = u` to draw the radius; a core probability tool → see [`/dsa/math_number_theory.md`](/dsa/math_number_theory.md)
 
 ---

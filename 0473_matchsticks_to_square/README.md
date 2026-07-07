@@ -52,7 +52,7 @@ Explanation: You cannot find a way to form a square with all the matchsticks.
 ## DSA Concepts Used
 
 - **Backtracking** — the core solution is a depth-first assignment of each stick to one of four sides, undoing a choice when it cannot complete a square → see [`/dsa/backtracking.md`](/dsa/backtracking.md)
-- **Bitmask Dynamic Programming** — with `n ≤ 15`, a subset of used sticks fits in an `int`, so `dp[mask]` over `2^n` states gives a polynomial-in-`2^n` alternative to raw search → see [`/dsa/bit_manipulation.md`](/dsa/bit_manipulation.md)
+- **Bitmask Dynamic Programming** — with `n ≤ 15`, a subset of used sticks fits in an `int`, so `dp[mask]` over `2^n` states gives a polynomial-in-`2^n` alternative to raw search → see [`/dsa/bitmask.md`](/dsa/bitmask.md)
 - **Partition / Subset-Sum shape** — "split the multiset into 4 groups of equal sum" is a k-partition problem; the target side `total/4` is the subset-sum goal repeated four times → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
 
 ---
