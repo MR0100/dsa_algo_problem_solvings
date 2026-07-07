@@ -57,7 +57,7 @@ Output: 2
 - **Sorting** — a block longer than n/2 must cover index ⌊n/2⌋ after sorting → see [`/dsa/sorting.md`](/dsa/sorting.md)
 - **Divide and Conquer** — the global majority must be the majority of at least one half; merge by counting → see [`/dsa/divide_and_conquer.md`](/dsa/divide_and_conquer.md)
 - **Bit Manipulation** — the majority element dictates the majority bit at every one of the 32 positions → see [`/dsa/bit_manipulation.md`](/dsa/bit_manipulation.md)
-- **Greedy / Streaming (Boyer–Moore Voting)** — pair off majority vs non-majority occurrences with a single counter; the survivor is the answer → see [`/dsa/greedy.md`](/dsa/greedy.md)
+- **Greedy / Streaming (Boyer–Moore Voting)** — pair off majority vs non-majority occurrences with a single counter; the survivor is the answer → see [`/dsa/boyer_moore_voting.md`](/dsa/boyer_moore_voting.md)
 
 ---
 

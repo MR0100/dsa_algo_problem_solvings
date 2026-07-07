@@ -56,7 +56,7 @@ Output: 1
 
 ## DSA Concepts Used
 
-- **Histogram + Monotonic Stack** — reduce each row to a histogram problem (#84). See [`/dsa/stack.md`](/dsa/stack.md)
+- **Histogram + Monotonic Stack** — reduce each row to a histogram problem (#84). See [`/dsa/monotonic_stack.md`](/dsa/monotonic_stack.md)
 - **Dynamic Programming (Left/Right/Height arrays)** — three O(n) DP arrays per row avoid re-running the full stack algorithm.
 
 ---

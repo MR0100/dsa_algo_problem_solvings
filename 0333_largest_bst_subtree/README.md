@@ -70,7 +70,7 @@ Output: 2
 
 - **Binary Search Tree** — the core validity rule (left < node < right, applied to the whole subtree) is what each approach checks → see [`/dsa/binary_search_tree.md`](/dsa/binary_search_tree.md)
 - **Tree Traversal (Post-Order)** — the optimal solution collects `(isBST, size, min, max)` from children before deciding the parent, i.e. bottom-up DFS → see [`/dsa/tree_traversal.md`](/dsa/tree_traversal.md)
-- **Dynamic Programming on Trees** — post-order returns a small tuple of subproblem answers per node so the parent decides in O(1), the classic tree-DP shape → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
+- **Dynamic Programming on Trees** — post-order returns a small tuple of subproblem answers per node so the parent decides in O(1), the classic tree-DP shape → see [`/dsa/tree_dp.md`](/dsa/tree_dp.md)
 
 ---
 

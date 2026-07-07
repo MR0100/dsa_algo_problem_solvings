@@ -44,7 +44,7 @@ Output: 0
 
 ## DSA Concepts Used
 - **Number Theory / Digit Counting** — count contributions per decimal place rather than per number → see [`/dsa/math_number_theory.md`](/dsa/math_number_theory.md)
-- **Digit DP (combinatorial counting)** — the place-value split is the closed-form heart of digit dynamic programming → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
+- **Digit DP (combinatorial counting)** — the place-value split is the closed-form heart of digit dynamic programming → see [`/dsa/digit_dp.md`](/dsa/digit_dp.md)
 
 ---
 

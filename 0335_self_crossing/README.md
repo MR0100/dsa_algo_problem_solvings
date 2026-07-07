@@ -61,8 +61,8 @@ Explanation: The path crosses itself at the point (0, 0).
 
 ## DSA Concepts Used
 
-- **Geometry / Math (case analysis)** — the spiral structure restricts a self-intersection to three fixed local patterns among the last few edges; the optimal solution is pure inequality bookkeeping → see [`/dsa/math_number_theory.md`](/dsa/math_number_theory.md)
-- **Array scanning** — a single left-to-right pass comparing each edge only to a constant window of preceding edges → see [`/dsa/two_pointers.md`](/dsa/two_pointers.md)
+- **Geometry / Math (case analysis)** — the spiral structure restricts a self-intersection to three fixed local patterns among the last few edges; the optimal solution is pure inequality bookkeeping → see [`/dsa/geometry.md`](/dsa/geometry.md)
+- **Array scanning** — a single left-to-right pass comparing each edge only to a constant window of preceding edges → see [`/dsa/arrays.md`](/dsa/arrays.md)
 - **Segment intersection (brute force oracle)** — the baseline simulates coordinates and tests axis-aligned segment overlap; no dedicated file exists, closest is math above.
 
 ---

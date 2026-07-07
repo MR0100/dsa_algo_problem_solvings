@@ -63,7 +63,7 @@ Output: []
 
 - **Linked List** — all solutions relink existing nodes; no new nodes are allocated.
 - **Divide and Conquer** — Approach 3 pairs lists and merges in O(log k) rounds, making it O(N log k).
-- **Min-Heap / Priority Queue** — Approach 4 keeps the k current list heads in a min-heap, popping the global minimum each time. → see [`/dsa/heap.md`](/dsa/heap.md)
+- **Min-Heap / Priority Queue** — Approach 4 keeps the k current list heads in a min-heap, popping the global minimum each time. → see [`/dsa/heap_priority_queue.md`](/dsa/heap_priority_queue.md)
 
 ---
 

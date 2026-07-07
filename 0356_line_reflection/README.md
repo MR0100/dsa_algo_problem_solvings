@@ -56,7 +56,7 @@ Explanation: We can't choose a line.
 - **Hash Set** — store every point keyed by `(x, y)` so the mirror-membership test is O(1) → see [`/dsa/hash_map.md`](/dsa/hash_map.md)
 - **Two Pointers** — after sorting by `(y, x)`, converging pointers pair each point with its reflection → see [`/dsa/two_pointers.md`](/dsa/two_pointers.md)
 - **Sorting** — groups equal-y points and lays them out symmetrically so pairs align → see [`/dsa/sorting.md`](/dsa/sorting.md)
-- **Math / Geometry** — the mirror line is pinned to `x = (minX + maxX) / 2`; we compare `2·mirror` to avoid fractions → see [`/dsa/math_number_theory.md`](/dsa/math_number_theory.md)
+- **Math / Geometry** — the mirror line is pinned to `x = (minX + maxX) / 2`; we compare `2·mirror` to avoid fractions → see [`/dsa/geometry.md`](/dsa/geometry.md)
 
 ---
 

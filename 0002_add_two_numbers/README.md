@@ -61,7 +61,7 @@ Explanation: 9999999 + 9999 = 10009998.
 ## DSA Concepts Used
 
 - **Linked List** — digits are stored as nodes; we must traverse node-by-node and build a new list as output. → see [`/dsa/linked_list.md`](/dsa/linked_list.md)
-- **Math / Carry Propagation** — elementary column addition: `sum = d1 + d2 + carry`, write `sum % 10`, propagate `carry = sum / 10`. → see [`/dsa/math.md`](/dsa/math.md)
+- **Math / Carry Propagation** — elementary column addition: `sum = d1 + d2 + carry`, write `sum % 10`, propagate `carry = sum / 10`. → see [`/dsa/math_number_theory.md`](/dsa/math_number_theory.md)
 - **Recursion** — the problem has a natural recursive structure: handle one digit column, recurse on the rest with the new carry.
 
 ---

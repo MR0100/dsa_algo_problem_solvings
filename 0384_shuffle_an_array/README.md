@@ -57,7 +57,7 @@ solution.shuffle();    // Returns the random shuffling of array [1,2,3]. Example
 
 ## DSA Concepts Used
 
-- **Fisher–Yates (Knuth) Shuffle** — the in-place O(n) algorithm that produces each of n! permutations with equal probability → see [`/dsa/math_number_theory.md`](/dsa/math_number_theory.md)
+- **Fisher–Yates (Knuth) Shuffle** — the in-place O(n) algorithm that produces each of n! permutations with equal probability → see [`/dsa/shuffle.md`](/dsa/shuffle.md)
 - **Randomized / Sampling** — same family of uniform-random techniques as reservoir sampling → see [`/dsa/reservoir_sampling.md`](/dsa/reservoir_sampling.md)
 - **Design / Data-Structure API** — stateful class keeping a pristine original for `reset` alongside `shuffle` → see [`/dsa/design_data_structures.md`](/dsa/design_data_structures.md)
 

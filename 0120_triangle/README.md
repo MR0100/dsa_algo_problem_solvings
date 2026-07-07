@@ -48,7 +48,7 @@ Output: -10
 
 ## DSA Concepts Used
 
-- **DP** — minimum-cost path on a DAG → see [`/dsa/dynamic_programming.md`](/dsa/dynamic_programming.md)
+- **DP** — minimum-cost path on a DAG → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
 - **Rolling Array** — O(n) space by working bottom-up
 
 ---

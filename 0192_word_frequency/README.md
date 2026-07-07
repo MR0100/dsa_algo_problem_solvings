@@ -64,7 +64,7 @@ day 1
 ## DSA Concepts Used
 
 - **Hash Map** — counting occurrences is the textbook hash-map job: `freq[word]++` turns each update into O(1) instead of a linear scan → see [`/dsa/hash_map.md`](/dsa/hash_map.md)
-- **Sorting / Bucket Sort** — ranking words by count is a sort on a bounded integer key, so both comparison sort (O(U log U)) and bucket sort (O(W)) apply → see [`/dsa/sorting.md`](/dsa/sorting.md)
+- **Sorting / Bucket Sort** — ranking words by count is a sort on a bounded integer key, so both comparison sort (O(U log U)) and bucket sort (O(W)) apply → see [`/dsa/counting_sort.md`](/dsa/counting_sort.md)
 - **String Algorithms** — whitespace tokenisation ("one or more whitespace characters") is the parsing half of the problem → see [`/dsa/string_algorithms.md`](/dsa/string_algorithms.md)
 
 ---

@@ -53,7 +53,7 @@ Output: [1,2]
 ## DSA Concepts Used
 
 - **Hash Map (frequency counting)** — the direct approach tallies each value's occurrences → see [`/dsa/hash_map.md`](/dsa/hash_map.md)
-- **Boyer–Moore Voting (generalized)** — the >n/k majority pattern needs k-1 candidate/counter pairs; here k=3 gives O(1) space → see [`/dsa/greedy.md`](/dsa/greedy.md)
+- **Boyer–Moore Voting (generalized)** — the >n/k majority pattern needs k-1 candidate/counter pairs; here k=3 gives O(1) space → see [`/dsa/boyer_moore_voting.md`](/dsa/boyer_moore_voting.md)
 - **Sorting** — used only to produce deterministic output order → see [`/dsa/sorting.md`](/dsa/sorting.md)
 
 ---

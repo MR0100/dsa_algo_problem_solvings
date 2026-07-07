@@ -56,7 +56,7 @@ Output: true
 
 ## DSA Concepts Used
 
-- **Top-Down Memoized Recursion** — subproblems identified by the two substrings; memoize by `(a, b)` key. See [`/dsa/dynamic_programming.md`](/dsa/dynamic_programming.md)
+- **Top-Down Memoized Recursion** — subproblems identified by the two substrings; memoize by `(a, b)` key. See [`/dsa/dynamic_programming_2d.md`](/dsa/dynamic_programming_2d.md)
 - **3D Bottom-Up DP** — `dp[len][i][j]`: is `s1[i:i+len]` a scramble of `s2[j:j+len]`?
 - **Interval DP** — overlapping subproblems on string intervals.
 

@@ -51,7 +51,7 @@ Output: false
 ## DSA Concepts Used
 - **Backtracking** — try every move, recurse on the opponent's position, undo → see [`/dsa/backtracking.md`](/dsa/backtracking.md)
 - **Memoization / DP** — cache each board's win/lose verdict → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
-- **Game Theory (Sprague–Grundy)** — decompose into independent runs, XOR their Grundy numbers → see [`/dsa/math_number_theory.md`](/dsa/math_number_theory.md)
+- **Game Theory (Sprague–Grundy)** — decompose into independent runs, XOR their Grundy numbers → see [`/dsa/game_theory.md`](/dsa/game_theory.md)
 
 ---
 

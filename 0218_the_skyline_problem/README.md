@@ -65,7 +65,7 @@ Output: [[0,3],[5,0]]
 
 ## DSA Concepts Used
 
-- **Line Sweep** — process building edges left-to-right as events; the skyline only changes at edges → see [`/dsa/intervals.md`](/dsa/intervals.md)
+- **Line Sweep** — process building edges left-to-right as events; the skyline only changes at edges → see [`/dsa/line_sweep.md`](/dsa/line_sweep.md)
 - **Heap / Priority Queue** — a max-heap tracks the tallest currently-active building at the sweep line (with lazy deletion) → see [`/dsa/heap_priority_queue.md`](/dsa/heap_priority_queue.md)
 - **Divide and Conquer** — split buildings, recurse, and merge two skylines like merge sort → see [`/dsa/divide_and_conquer.md`](/dsa/divide_and_conquer.md)
 - **Hash Map** — supports lazy deletion by counting pending height removals → see [`/dsa/hash_map.md`](/dsa/hash_map.md)

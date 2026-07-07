@@ -77,7 +77,7 @@ But the second continuation byte does not start with 10, so it is invalid.
 ## DSA Concepts Used
 
 - **Bit Manipulation** — inspect leading bits with shifts/masks to classify each byte → see [`/dsa/bit_manipulation.md`](/dsa/bit_manipulation.md)
-- **Array single-pass state machine** — track "continuation bytes remaining" while scanning → see [`/dsa/hash_map.md`](/dsa/hash_map.md)
+- **Array single-pass state machine** — track "continuation bytes remaining" while scanning → see [`/dsa/arrays.md`](/dsa/arrays.md)
 
 ---
 

@@ -65,7 +65,7 @@ Explanation: After trying all the possible pairs (i, j), we cannot satisfy the t
 
 - **Sliding Window** — the `abs(i-j) <= indexDiff` bound restricts every check to a moving window of the last `indexDiff` elements → see [`/dsa/sliding_window.md`](/dsa/sliding_window.md)
 - **Ordered Set / Binary Search** — inside the window we binary-search a sorted structure for a neighbour within `valueDiff` → see [`/dsa/binary_search.md`](/dsa/binary_search.md)
-- **Bucketing (Bucket Sort idea)** — the optimal O(n) approach maps values into buckets of width `valueDiff+1` so a same-bucket collision is an instant hit → see [`/dsa/sorting.md`](/dsa/sorting.md)
+- **Bucketing (Bucket Sort idea)** — the optimal O(n) approach maps values into buckets of width `valueDiff+1` so a same-bucket collision is an instant hit → see [`/dsa/counting_sort.md`](/dsa/counting_sort.md)
 - **Hash Map** — buckets are stored as `bucketId → value` for O(1) access → see [`/dsa/hash_map.md`](/dsa/hash_map.md)
 
 ---

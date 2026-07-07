@@ -57,7 +57,7 @@ Output: 3
 ## DSA Concepts Used
 
 - **1D Dynamic Programming** — the House Robber recurrence `dp[i] = max(dp[i-1], dp[i-2] + nums[i])`, applied twice → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
-- **Array Handling** — reducing a circular array to two linear sub-ranges via index windows → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
+- **Array Handling** — reducing a circular array to two linear sub-ranges via index windows → see [`/dsa/arrays.md`](/dsa/arrays.md)
 
 ---
 

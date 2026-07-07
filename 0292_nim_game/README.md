@@ -59,7 +59,7 @@ Output: true
 ---
 
 ## DSA Concepts Used
-- **Game Theory / Pattern Recognition** — winning vs. losing positions in an impartial game → see [`/dsa/math_number_theory.md`](/dsa/math_number_theory.md)
+- **Game Theory / Pattern Recognition** — winning vs. losing positions in an impartial game → see [`/dsa/game_theory.md`](/dsa/game_theory.md)
 - **Dynamic Programming (1D)** — `win[k]` from `win[k-1..k-3]` (illustrative) → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
 - **Number Theory (modulo)** — closed-form `n % 4` → see [`/dsa/math_number_theory.md`](/dsa/math_number_theory.md)
 

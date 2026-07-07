@@ -53,7 +53,7 @@ Output: 1
 ## DSA Concepts Used
 
 - **Sorting** — sorting citations descending makes the h-index a simple rank scan → see [`/dsa/sorting.md`](/dsa/sorting.md)
-- **Counting Sort / Buckets** — because h ≤ n, bucketing by citation count gives an O(n) solution → see [`/dsa/sorting.md`](/dsa/sorting.md)
+- **Counting Sort / Buckets** — because h ≤ n, bucketing by citation count gives an O(n) solution → see [`/dsa/counting_sort.md`](/dsa/counting_sort.md)
 - **Binary Search on the Answer** — the "≥ h papers with ≥ h citations" predicate is monotone, so h can be binary-searched → see [`/dsa/binary_search.md`](/dsa/binary_search.md)
 
 ---

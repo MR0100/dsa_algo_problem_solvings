@@ -64,7 +64,7 @@ Explanation: The ranges are:
 ## DSA Concepts Used
 
 - **Two Pointers** — an anchor at each range's start and a probe extending the run of consecutive numbers → see [`/dsa/two_pointers.md`](/dsa/two_pointers.md)
-- **Array Scanning** — a single linear pass detecting where consecutiveness breaks → see [`/dsa/sorting.md`](/dsa/sorting.md)
+- **Array Scanning** — a single linear pass detecting where consecutiveness breaks → see [`/dsa/arrays.md`](/dsa/arrays.md)
 - **String Building** — formatting each range as `"a"` or `"a->b"` → see [`/dsa/string_algorithms.md`](/dsa/string_algorithms.md)
 
 ---

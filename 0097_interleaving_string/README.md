@@ -54,7 +54,7 @@ Output: true
 
 ## DSA Concepts Used
 
-- **2D Dynamic Programming** — `dp[i][j]`: can `s3[0:i+j]` be formed from `s1[0:i]` and `s2[0:j]`? See [`/dsa/dynamic_programming.md`](/dsa/dynamic_programming.md)
+- **2D Dynamic Programming** — `dp[i][j]`: can `s3[0:i+j]` be formed from `s1[0:i]` and `s2[0:j]`? See [`/dsa/dynamic_programming_2d.md`](/dsa/dynamic_programming_2d.md)
 - **Grid DP** — similar structure to Unique Paths but with character matching conditions.
 
 ---

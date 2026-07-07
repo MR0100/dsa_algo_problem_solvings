@@ -46,7 +46,7 @@ Output: 5
 
 ## DSA Concepts Used
 
-- **2D DP on strings** — `dp[i][j]` = count of ways `s[0:i]` contains `t[0:j]` as subsequence → see [`/dsa/dynamic_programming.md`](/dsa/dynamic_programming.md)
+- **2D DP on strings** — `dp[i][j]` = count of ways `s[0:i]` contains `t[0:j]` as subsequence → see [`/dsa/dynamic_programming_2d.md`](/dsa/dynamic_programming_2d.md)
 - **Rolling Array** — reduce space to O(n) by walking j from right to left
 
 ---

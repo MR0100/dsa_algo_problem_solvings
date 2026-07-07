@@ -49,7 +49,7 @@ Output: 4
 
 - **Hash Map** — bucket points by slope relative to an anchor; biggest bucket = best line through that anchor → see [`/dsa/hash_map.md`](/dsa/hash_map.md)
 - **Math / Number Theory (GCD)** — reduce (dy, dx) to lowest terms so equal slopes hash to the identical key, avoiding float precision entirely → see [`/dsa/math_number_theory.md`](/dsa/math_number_theory.md)
-- **Cross product collinearity test** — `(x2−x1)(y3−y1) − (y2−y1)(x3−x1) == 0` checks three points on one line with pure integer arithmetic (no division, no vertical-line special case) → see [`/dsa/math_number_theory.md`](/dsa/math_number_theory.md)
+- **Cross product collinearity test** — `(x2−x1)(y3−y1) − (y2−y1)(x3−x1) == 0` checks three points on one line with pure integer arithmetic (no division, no vertical-line special case) → see [`/dsa/geometry.md`](/dsa/geometry.md)
 
 ---
 

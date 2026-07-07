@@ -57,7 +57,7 @@ the array primes = [2,3,5].
 
 - **Heap / Priority Queue** — always extracting the globally smallest next candidate → see [`/dsa/heap_priority_queue.md`](/dsa/heap_priority_queue.md)
 - **Dynamic Programming (1-D)** — building the sorted sequence incrementally, each new number from earlier ones → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
-- **Multi-pointer merge of sorted streams** — merging `k` sorted sequences `prime*ugly[...]` (k-way merge, same idea as merging sorted lists) → see [`/dsa/heap_priority_queue.md`](/dsa/heap_priority_queue.md)
+- **Multi-pointer merge of sorted streams** — merging `k` sorted sequences `prime*ugly[...]` (k-way merge, same idea as merging sorted lists) → see [`/dsa/k_way_merge.md`](/dsa/k_way_merge.md)
 
 ---
 

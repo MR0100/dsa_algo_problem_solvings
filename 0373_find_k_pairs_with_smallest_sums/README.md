@@ -65,7 +65,7 @@ Explanation: All possible pairs are returned from the sequence: [1,3],[2,3]
 ## DSA Concepts Used
 
 - **Min-Heap / Priority Queue** — always pop the globally smallest candidate sum next → see [`/dsa/heap_priority_queue.md`](/dsa/heap_priority_queue.md)
-- **K-way merge / sorted-frontier expansion** — because both arrays are sorted, sums increase along rows and columns, so we expand a staircase boundary → see [`/dsa/heap_priority_queue.md`](/dsa/heap_priority_queue.md)
+- **K-way merge / sorted-frontier expansion** — because both arrays are sorted, sums increase along rows and columns, so we expand a staircase boundary → see [`/dsa/k_way_merge.md`](/dsa/k_way_merge.md)
 - **Sorting** — the brute-force baseline sorts all pairs by sum → see [`/dsa/sorting.md`](/dsa/sorting.md)
 
 ---

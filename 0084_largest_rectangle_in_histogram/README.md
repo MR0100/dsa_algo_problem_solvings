@@ -44,7 +44,7 @@ Output: 4
 
 ## DSA Concepts Used
 
-- **Monotonic Stack** — maintain indices in increasing height order; pop when a shorter bar is seen to compute widths. See [`/dsa/stack.md`](/dsa/stack.md)
+- **Monotonic Stack** — maintain indices in increasing height order; pop when a shorter bar is seen to compute widths. See [`/dsa/monotonic_stack.md`](/dsa/monotonic_stack.md)
 - **Sentinel Value** — append height 0 to force all remaining bars to be popped at the end.
 
 ---

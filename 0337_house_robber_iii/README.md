@@ -54,7 +54,7 @@ Explanation: Maximum amount of money the thief can rob = 4 + 5 = 9.
 ## DSA Concepts Used
 
 - **Tree Traversal (post-order DFS)** — the optimal solution solves children before parents so a node can combine their results → see [`/dsa/tree_traversal.md`](/dsa/tree_traversal.md)
-- **Dynamic Programming (1D state per node)** — each node keeps two states (robbed / not robbed); this is tree DP, the closest existing file is → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
+- **Dynamic Programming (1D state per node)** — each node keeps two states (robbed / not robbed); this is tree DP, the closest existing file is → see [`/dsa/tree_dp.md`](/dsa/tree_dp.md)
 - **Graph BFS/DFS** — depth-first recursion over the tree structure → see [`/dsa/graph_bfs_dfs.md`](/dsa/graph_bfs_dfs.md)
 
 ---

@@ -59,7 +59,7 @@ Explanation: "06" cannot be mapped to "F" because of the leading zero.
 
 ## DSA Concepts Used
 
-- **Dynamic Programming (Linear)** — `dp[i]` = number of ways to decode `s[0:i]`. See [`/dsa/dynamic_programming.md`](/dsa/dynamic_programming.md)
+- **Dynamic Programming (Linear)** — `dp[i]` = number of ways to decode `s[0:i]`. See [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
 - **Fibonacci-like recurrence** — each position depends on the previous 1 or 2 positions.
 
 ---

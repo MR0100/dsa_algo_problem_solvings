@@ -53,7 +53,7 @@ Output: 10
 
 ## DSA Concepts Used
 
-- **Interval Dynamic Programming** — solving over ranges `(l, r)` where the "last" event fixes the boundaries → see [`/dsa/dynamic_programming_2d.md`](/dsa/dynamic_programming_2d.md)
+- **Interval Dynamic Programming** — solving over ranges `(l, r)` where the "last" event fixes the boundaries → see [`/dsa/interval_dp.md`](/dsa/interval_dp.md)
 - **Divide and conquer / memoisation** — decomposing an interval into independent subintervals around a split point → see [`/dsa/divide_and_conquer.md`](/dsa/divide_and_conquer.md)
 
 ---

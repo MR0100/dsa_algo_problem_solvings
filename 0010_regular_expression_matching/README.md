@@ -63,7 +63,7 @@ Explanation: ".*" means "zero or more (*) of any character (.)".
 
 - **Recursion** — Approach 1 directly encodes the two-choice rule for `*` as recursive calls.
 - **Memoisation (Top-Down DP)** — Approach 2 caches `(i, j)` results to avoid exponential repeated sub-problems.
-- **Bottom-Up Dynamic Programming** — Approach 3 fills a 2-D table from base cases upward, the canonical interview answer for this problem. → see [`/dsa/dynamic_programming.md`](/dsa/dynamic_programming.md) (to be created).
+- **Bottom-Up Dynamic Programming** — Approach 3 fills a 2-D table from base cases upward, the canonical interview answer for this problem. → see [`/dsa/dynamic_programming_2d.md`](/dsa/dynamic_programming_2d.md).
 
 ---
 

@@ -63,7 +63,7 @@ randomizedSet.getRandom(); // Since 2 is the only number in the set, getRandom()
 
 - **Design Data Structures** — combine two structures so every operation hits O(1) → see [`/dsa/design_data_structures.md`](/dsa/design_data_structures.md)
 - **Hash Map** — value→index map gives O(1) membership and locate → see [`/dsa/hash_map.md`](/dsa/hash_map.md)
-- **Array** — a contiguous slice gives O(1) uniform random indexing; swap-remove keeps it dense → see [`/dsa/matrix_traversal.md`](/dsa/matrix_traversal.md)
+- **Array** — a contiguous slice gives O(1) uniform random indexing; swap-remove keeps it dense → see [`/dsa/arrays.md`](/dsa/arrays.md)
 
 ---
 

@@ -82,8 +82,8 @@ The worst case is that you pay $1.
 
 ## DSA Concepts Used
 
-- **Interval Dynamic Programming** — `dp[lo][hi]` = min guaranteed cost for the range `[lo, hi]`, built from smaller sub-intervals → see [`/dsa/dynamic_programming_2d.md`](/dsa/dynamic_programming_2d.md)
-- **Minimax / Game Theory** — the adversary picks the worse branch after each guess, so we minimise the maximum → see [`/dsa/dynamic_programming_2d.md`](/dsa/dynamic_programming_2d.md)
+- **Interval Dynamic Programming** — `dp[lo][hi]` = min guaranteed cost for the range `[lo, hi]`, built from smaller sub-intervals → see [`/dsa/interval_dp.md`](/dsa/interval_dp.md)
+- **Minimax / Game Theory** — the adversary picks the worse branch after each guess, so we minimise the maximum → see [`/dsa/game_theory.md`](/dsa/game_theory.md)
 - **Memoization vs. tabulation** — the same recurrence solved top-down and bottom-up → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
 
 ---

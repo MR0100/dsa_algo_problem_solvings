@@ -51,7 +51,7 @@ Output: 3
 ## DSA Concepts Used
 
 - **Two Pointers (last-seen indices)** — track the most recent index of each word (or the previous occurrence when they coincide) in a single sweep → see [`/dsa/two_pointers.md`](/dsa/two_pointers.md)
-- **Array Traversal** — a linear scan with case-split logic → see [`/dsa/prefix_sum.md`](/dsa/prefix_sum.md)
+- **Array Traversal** — a linear scan with case-split logic → see [`/dsa/arrays.md`](/dsa/arrays.md)
 
 ---
 

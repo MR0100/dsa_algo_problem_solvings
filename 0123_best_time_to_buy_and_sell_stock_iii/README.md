@@ -54,7 +54,7 @@ Output: 0
 
 ## DSA Concepts Used
 
-- **DP with states** — 4 states tracking phases of at most 2 transactions → see [`/dsa/dynamic_programming.md`](/dsa/dynamic_programming.md)
+- **DP with states** — 4 states tracking phases of at most 2 transactions → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
 - **Divide-and-Conquer** — precompute best single-transaction for left and right halves
 
 ---

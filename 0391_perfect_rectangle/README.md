@@ -63,7 +63,7 @@ Explanation: Because two of the rectangles overlap with each other.
 ## DSA Concepts Used
 
 - **Hash Set (corner parity)** — toggle each rectangle corner; interior corners cancel in pairs/quads, only the 4 outer corners survive → see [`/dsa/hash_map.md`](/dsa/hash_map.md)
-- **Line Sweep over intervals** — process left/right edges by x, maintain active vertical intervals, reject overlaps → see [`/dsa/intervals.md`](/dsa/intervals.md)
+- **Line Sweep over intervals** — process left/right edges by x, maintain active vertical intervals, reject overlaps → see [`/dsa/line_sweep.md`](/dsa/line_sweep.md)
 - **Sorting** — order edge events by x for the sweep → see [`/dsa/sorting.md`](/dsa/sorting.md)
 
 ---

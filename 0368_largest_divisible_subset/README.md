@@ -53,7 +53,7 @@ Output: [1,2,4,8]
 
 ## DSA Concepts Used
 
-- **Dynamic Programming (1D, LIS-shaped)** — `dp[i]` = longest divisible chain ending at `i`; the recurrence is the Longest Increasing Subsequence pattern with "divides" replacing "<" → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
+- **Dynamic Programming (1D, LIS-shaped)** — `dp[i]` = longest divisible chain ending at `i`; the recurrence is the Longest Increasing Subsequence pattern with "divides" replacing "<" → see [`/dsa/longest_increasing_subsequence.md`](/dsa/longest_increasing_subsequence.md)
 - **Sorting** — sorting ascending makes divisibility transitive along the array, so only consecutive-in-subset pairs must divide → see [`/dsa/sorting.md`](/dsa/sorting.md)
 
 ---

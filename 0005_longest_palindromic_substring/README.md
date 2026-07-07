@@ -52,7 +52,7 @@ Output: "bb"
 - **String** — the problem operates directly on character indices; all approaches require positional access into the input.
 - **Dynamic Programming** — Approach 2 builds a 2-D table from sub-problems (is `s[i..j]` a palindrome?) up to the full string.
 - **Two Pointers / Expand Around Center** — Approach 3 uses two pointers (`l`, `r`) expanding outward from each center while `s[l]==s[r]`.
-- **Manacher's Algorithm** — Approach 4 uses a "radius array" to skip already-computed palindrome lengths, achieving O(n). → see [`/dsa/sliding_window.md`](/dsa/sliding_window.md) for related expand patterns.
+- **Manacher's Algorithm** — Approach 4 uses a "radius array" to skip already-computed palindrome lengths, achieving O(n). → see [`/dsa/string_algorithms.md`](/dsa/string_algorithms.md) for related expand patterns.
 
 ---
 

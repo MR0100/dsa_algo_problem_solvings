@@ -47,7 +47,7 @@ Explanation: The array contains less than 2 elements, therefore return 0.
 
 ## DSA Concepts Used
 
-- **Sorting (non-comparison sorts)** — radix sort and bucket sort beat the Ω(n log n) comparison-sort lower bound because the values are bounded integers → see [`/dsa/sorting.md`](/dsa/sorting.md)
+- **Sorting (non-comparison sorts)** — radix sort and bucket sort beat the Ω(n log n) comparison-sort lower bound because the values are bounded integers → see [`/dsa/counting_sort.md`](/dsa/counting_sort.md)
 - **Math / Pigeonhole Principle** — n numbers create n−1 sorted gaps averaging (max−min)/(n−1), so the maximum gap is at least that; this bounds where the answer can live → see [`/dsa/math_number_theory.md`](/dsa/math_number_theory.md)
 
 ---

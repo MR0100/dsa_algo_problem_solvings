@@ -62,7 +62,7 @@ Explanation: The triplet (3, 4, 5) is valid because nums[3] == 0 < nums[4] == 4 
 
 - **Greedy** — the optimal solution greedily keeps the smallest possible "start" and "middle" tails, which is enough to detect a triple without tracking indices → see [`/dsa/greedy.md`](/dsa/greedy.md)
 - **Prefix / Suffix Aggregates** — Approach 2 precomputes running min-from-left and max-from-right so each middle index is testable in O(1) → see [`/dsa/prefix_sum.md`](/dsa/prefix_sum.md)
-- **Longest Increasing Subsequence intuition** — this is the LIS problem specialized to length 3; the two-smallest trick is the patience-sorting idea reduced to a two-element tails array → see [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
+- **Longest Increasing Subsequence intuition** — this is the LIS problem specialized to length 3; the two-smallest trick is the patience-sorting idea reduced to a two-element tails array → see [`/dsa/longest_increasing_subsequence.md`](/dsa/longest_increasing_subsequence.md)
 
 ---
 

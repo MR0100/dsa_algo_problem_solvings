@@ -51,7 +51,7 @@ Output: [1]
 ## DSA Concepts Used
 - **Hash Map (frequency counting)** — a single pass tallies each value's count → see [`/dsa/hash_map.md`](/dsa/hash_map.md)
 - **Heap / Priority Queue** — a size-`k` min-heap keeps the k largest frequencies for O(n log k) → see [`/dsa/heap_priority_queue.md`](/dsa/heap_priority_queue.md)
-- **Bucket Sort / Counting Sort** — frequencies are integers in `[1, n]`, so they can index buckets for a linear scan → see [`/dsa/sorting.md`](/dsa/sorting.md)
+- **Bucket Sort / Counting Sort** — frequencies are integers in `[1, n]`, so they can index buckets for a linear scan → see [`/dsa/counting_sort.md`](/dsa/counting_sort.md)
 - **Quickselect** — an alternative O(n)-average partition on frequencies (mentioned in Key Takeaways) → see [`/dsa/quickselect.md`](/dsa/quickselect.md)
 
 ---

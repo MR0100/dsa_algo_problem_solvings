@@ -40,7 +40,7 @@ Output: 1
 
 ## DSA Concepts Used
 
-- **Dynamic Programming** — `dp[n]` = Catalan number C(n). See [`/dsa/dynamic_programming.md`](/dsa/dynamic_programming.md)
+- **Dynamic Programming** — `dp[n]` = Catalan number C(n). See [`/dsa/dynamic_programming_1d.md`](/dsa/dynamic_programming_1d.md)
 - **Catalan Numbers** — C(n) = Σ C(i-1)×C(n-i) for i=1..n; closed form C(n) = C(2n,n)/(n+1).
 
 ---
