@@ -6,7 +6,7 @@ every approach brute-force → optimal, 10-section README, `go run` verified).
 
 Legend: ✅ Complete &nbsp;·&nbsp; ⚠️ Partial (code exists, README missing/incomplete) &nbsp;·&nbsp; ❌ Missing entirely
 
-**Last audited: 2026-07-07** — full-repo verification of #0001–#0400.
+**Last audited: 2026-07-07** — full-repo verification of #0001–#0500.
 
 ---
 
@@ -18,7 +18,9 @@ Legend: ✅ Complete &nbsp;·&nbsp; ⚠️ Partial (code exists, README missing/
 | #0131 – #0210 | ✅ Complete | 80 | Prior 8 gaps closed: #0180 solved from scratch; READMEs added for #0175, #0185, #0190, #0198, #0199, #0200, #0210. |
 | #0211 – #0300 | ✅ Complete | 90 | Solved this project; strict per-approach audit clean. |
 | #0301 – #0400 | ✅ Complete | 100 | Solved this project (recovered from a mid-batch rate-limit failure; regenerated in small waves). |
-| **Total** | **✅** | **400 / 400** | Contiguous #0001–#0400, no duplicates, no gaps. |
+| #0401 – #0450 | ✅ Complete | 50 | Solved this project in small waves; concepts linked to the correct `/dsa` files (incl. the 12 new ones). |
+| #0451 – #0500 | ✅ Complete | 50 | Solved this project in small waves; several hard ones cross-verified vs brute-force oracles (#460 LFU, #480 sliding-window median, #488 Zuma). |
+| **Total** | **✅** | **500 / 500** | Contiguous #0001–#0500, no duplicates, no gaps. |
 
 ---
 
@@ -38,7 +40,7 @@ All checks pass across the full 400-problem range:
 
 ## `/dsa/` reference library
 
-**43 concept files** present, all substantive; every README link across #0001–#0400 resolves (0 broken links).
+**44 concept files** present, all substantive; every README link across #0001–#0500 resolves (0 broken links). (`combinatorics.md` added for #0458 Poor Pigs et al.)
 
 A concept-link audit (2026-07-07) found many bullets linked to a "closest" file rather than the right one, and repaired them: every "DSA Concepts Used" bullet now points to the semantically correct file. **12 new concept files** were authored (Go-first, full worked examples) and their bullets repointed:
 `arrays`, `geometry`, `line_sweep`, `boyer_moore_voting`, `counting_sort`,
@@ -50,5 +52,6 @@ Also repointed to existing files: Manacher's → `string_algorithms`, Monotonic 
 
 ## Remaining work
 
-- **#0401 onward — not yet started.** Next problem to solve is **#0401 (Binary Watch)**.
+- **#0501 onward — not yet started.** Next problem to solve is **#0501 (Find Mode in Binary Search Tree)**.
+- **Optional new `/dsa` concept files** flagged so far (currently linked to the nearest correct existing file — not broken; candidate future additions): `dijkstra` (#499, folded into `graph_bfs_dfs`+`heap_priority_queue`), `rejection_sampling` (#470/#478, folded into `math_number_theory`/`reservoir_sampling`), `knapsack` (#416/#473/#474), `bitmask_enumeration` (#411), `simulation` (#418), `quad_tree` (#427), `n_ary_tree` (#428/#429).
 - **Optional:** author dedicated `/dsa/` pages for the concepts listed above and repoint the links (currently they resolve to the nearest existing file, so this is a polish item, not a defect).
