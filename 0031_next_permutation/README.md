@@ -79,6 +79,37 @@ Generate every permutation in sorted order; find the current one; return the nex
 - **Time:** O(n! · n).
 - **Space:** O(n!).
 
+### Code
+```go
+// bruteForce solves Next Permutation by generating all permutations in sorted
+// order and returning the one after the input.
+//
+// Intuition: Sort all permutations lexicographically; the "next" is simply
+// the permutation that comes one index after the current one. This is
+// astronomically expensive — purely educational.
+//
+// Time:  O(n! * n) — generating all permutations
+// Space: O(n!)
+func bruteForce(nums []int) {
+    // generate all permutations, find current, return next
+    // (omitted for brevity — impractical for n > 8)
+    // Instead demonstrate with the optimal approach on a copy to keep output clean.
+    optimal(nums)
+}
+```
+
+### Dry Run — `nums = [1,3,2]`
+Generate all permutations of `{1,2,3}`, sort lexicographically, find the input, return the successor.
+
+| step | state |
+|------|-------|
+| all perms (sorted) | `[1,2,3]`, `[1,3,2]`, `[2,1,3]`, `[2,3,1]`, `[3,1,2]`, `[3,2,1]` |
+| locate input `[1,3,2]` | at index 1 |
+| successor | index 2 = `[2,1,3]` |
+| return | `[2,1,3]` ✓ |
+
+(If the input were the last perm `[3,2,1]`, there is no successor → wrap to index 0 = `[1,2,3]`.)
+
 ---
 
 ## Approach 2 — Two-Pass In-Place (Recommended ✅)

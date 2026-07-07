@@ -92,6 +92,53 @@ State 8: digit→8, sign→-1, dot→-1, e→-1
 - **Time:** O(n).
 - **Space:** O(1) — fixed-size transition table.
 
+### Code
+```go
+// isNumberDFA solves Valid Number using a state machine that processes
+// each character and transitions between states.
+//
+// Time:  O(n) — one pass.
+// Space: O(1)
+func isNumberDFA(s string) bool {
+	// transitions[state][charType] = nextState, -1 = invalid
+	// charType: 0=digit, 1=sign(+/-), 2=dot, 3=e/E
+	transitions := [9][4]int{
+		/*0*/ {2, 1, 3, -1},
+		/*1*/ {2, -1, 3, -1},
+		/*2*/ {2, -1, 5, 6},
+		/*3*/ {4, -1, -1, -1},
+		/*4*/ {4, -1, -1, 6},
+		/*5*/ {4, -1, -1, 6},
+		/*6*/ {8, 7, -1, -1},
+		/*7*/ {8, -1, -1, -1},
+		/*8*/ {8, -1, -1, -1},
+	}
+	acceptStates := map[int]bool{2: true, 4: true, 5: true, 8: true}
+
+	state := 0
+	for _, ch := range s {
+		var ct int
+		switch {
+		case ch >= '0' && ch <= '9':
+			ct = 0
+		case ch == '+' || ch == '-':
+			ct = 1
+		case ch == '.':
+			ct = 2
+		case ch == 'e' || ch == 'E':
+			ct = 3
+		default:
+			return false // invalid character
+		}
+		state = transitions[state][ct]
+		if state == -1 {
+			return false
+		}
+	}
+	return acceptStates[state]
+}
+```
+
 ### Dry Run — `s = "-0.1"`
 ```
 State 0: '-' (sign) → state 1
@@ -122,6 +169,78 @@ Parse the string according to the grammar directly:
 ### Complexity
 - **Time:** O(n).
 - **Space:** O(1).
+
+### Code
+```go
+// isNumberParse solves Valid Number by parsing the string manually according to
+// the grammar:
+//   valid number = (integer | decimal) optional-exponent
+//
+// Time:  O(n)
+// Space: O(1)
+func isNumberParse(s string) bool {
+	i, n := 0, len(s)
+	if n == 0 {
+		return false
+	}
+	// optional leading sign
+	if s[i] == '+' || s[i] == '-' {
+		i++
+	}
+
+	seenDigit := false
+	seenDot := false
+
+	for i < n && s[i] != 'e' && s[i] != 'E' {
+		if s[i] >= '0' && s[i] <= '9' {
+			seenDigit = true
+		} else if s[i] == '.' && !seenDot {
+			seenDot = true
+		} else {
+			return false
+		}
+		i++
+	}
+
+	if !seenDigit {
+		return false // must have at least one digit in mantissa
+	}
+
+	// optional exponent
+	if i < n && (s[i] == 'e' || s[i] == 'E') {
+		i++
+		if i < n && (s[i] == '+' || s[i] == '-') {
+			i++ // optional sign after e
+		}
+		seenExpDigit := false
+		for i < n {
+			if s[i] >= '0' && s[i] <= '9' {
+				seenExpDigit = true
+			} else {
+				return false
+			}
+			i++
+		}
+		if !seenExpDigit {
+			return false // exponent must have digits
+		}
+	}
+
+	return i == n
+}
+```
+
+### Dry Run — `s = "-0.1"`
+
+`n = 4`. `s[0] = '-'` → skip sign, `i = 1`. `seenDigit = false`, `seenDot = false`:
+
+| `i` | `s[i]` | Branch | State after |
+|-----|--------|--------|-------------|
+| 1 | `0` | digit | `seenDigit = true`, `i = 2` |
+| 2 | `.` | dot & `!seenDot` | `seenDot = true`, `i = 3` |
+| 3 | `1` | digit | `seenDigit = true`, `i = 4` |
+
+Mantissa loop ends (`i == n`). `seenDigit = true`. No `e`/`E`, so exponent skipped. `return i == n` → `4 == 4` → **true**.
 
 ---
 

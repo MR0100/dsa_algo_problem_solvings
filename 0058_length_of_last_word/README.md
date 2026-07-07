@@ -75,6 +75,31 @@ Output: 6
 - **Time:** O(n).
 - **Space:** O(n) — allocates the words slice.
 
+### Code
+```go
+func splitCount(s string) int {
+    words := strings.Fields(s)
+    if len(words) == 0 {
+        return 0
+    }
+    return len(words[len(words)-1])
+}
+```
+
+### Dry Run — `s = "   fly me   to   the moon  "`
+
+`strings.Fields(s)` splits on runs of whitespace and drops leading/trailing spaces, then we take the last element's length.
+
+| step | value |
+|------|-------|
+| input `s` | `"   fly me   to   the moon  "` |
+| `words = strings.Fields(s)` | `["fly", "me", "to", "the", "moon"]` |
+| `len(words)` | 5 (not 0, so skip the guard) |
+| last word `words[4]` | `"moon"` |
+| `len(words[4])` | 4 |
+
+Return 4 ✓
+
 ---
 
 ## Approach 2 — Reverse Scan (Recommended ✅)

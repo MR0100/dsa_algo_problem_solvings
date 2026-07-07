@@ -119,6 +119,18 @@ func numTreesFormula(n int) int {
 }
 ```
 
+### Dry Run (n=3)
+
+Init: `result = 1`. Loop `i = 0..2`, updating `result = result * (n+1+i) / (i+1)` (n=3):
+
+| i | n+1+i | i+1 | result * (n+1+i) | / (i+1) → result |
+|---|-------|-----|------------------|------------------|
+| 0 | 4     | 1   | 1 × 4 = 4        | 4 / 1 = 4        |
+| 1 | 5     | 2   | 4 × 5 = 20       | 20 / 2 = 10      |
+| 2 | 6     | 3   | 10 × 6 = 60      | 60 / 3 = 20      |
+
+After loop: `result = 20`. Final: `result / (n+1) = 20 / 4 = 5` ✓
+
 ### Catalan Sequence (first 10)
 
 | n | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |

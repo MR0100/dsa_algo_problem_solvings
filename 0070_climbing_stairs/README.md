@@ -79,6 +79,40 @@ Base: `ways(0) = 1` (one way to stand at bottom), `ways(1) = 1`.
 - **Time:** O(n).
 - **Space:** O(n) — memo + stack.
 
+### Code
+```go
+func memoization(n int) int {
+	memo := make([]int, n+1)
+	var dp func(i int) int
+	dp = func(i int) int {
+		if i <= 1 {
+			return 1 // base: 0 steps → 1 way; 1 step → 1 way
+		}
+		if memo[i] != 0 {
+			return memo[i]
+		}
+		memo[i] = dp(i-1) + dp(i-2)
+		return memo[i]
+	}
+	return dp(n)
+}
+```
+
+### Dry Run — `n = 5`
+
+Recursion unwinds top-down; each `dp(i)` is computed once, then cached in `memo[i]`. Order in which values first resolve:
+
+| call | resolves via | value | memo written |
+|------|--------------|-------|--------------|
+| dp(1) | base i≤1 | 1 | — |
+| dp(0) | base i≤1 | 1 | — |
+| dp(2) | dp(1)+dp(0)=1+1 | 2 | memo[2]=2 |
+| dp(3) | dp(2)+dp(1)=2+1 | 3 | memo[3]=3 |
+| dp(4) | dp(3)+dp(2)=3+2 | 5 | memo[4]=5 |
+| dp(5) | dp(4)+dp(3)=5+3 | 8 | memo[5]=8 |
+
+Return `dp(5) = 8` ✓ (each cached value reused instead of recomputed)
+
 ---
 
 ## Approach 2 — DP Bottom-Up
@@ -89,6 +123,21 @@ Fill `dp[0..n]` iteratively. `dp[i] = dp[i-1] + dp[i-2]`.
 ### Complexity
 - **Time:** O(n).
 - **Space:** O(n).
+
+### Code
+```go
+func dpBottomUp(n int) int {
+	if n <= 1 {
+		return 1
+	}
+	dp := make([]int, n+1)
+	dp[0], dp[1] = 1, 1
+	for i := 2; i <= n; i++ {
+		dp[i] = dp[i-1] + dp[i-2]
+	}
+	return dp[n]
+}
+```
 
 ### Dry Run — `n = 5`
 ```

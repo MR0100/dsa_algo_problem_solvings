@@ -78,6 +78,53 @@ Two passes:
 - **Time:** O(m × n).
 - **Space:** O(m + n).
 
+### Code
+```go
+func extraSpace(matrix [][]int) {
+	m, n := len(matrix), len(matrix[0])
+	rows := make([]bool, m)
+	cols := make([]bool, n)
+
+	for r := 0; r < m; r++ {
+		for c := 0; c < n; c++ {
+			if matrix[r][c] == 0 {
+				rows[r] = true
+				cols[c] = true
+			}
+		}
+	}
+	for r := 0; r < m; r++ {
+		for c := 0; c < n; c++ {
+			if rows[r] || cols[c] {
+				matrix[r][c] = 0
+			}
+		}
+	}
+}
+```
+
+### Dry Run — `matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]`
+
+**Pass 1 — record zeros** (`rows[m]`, `cols[n]`):
+
+| cell | value | effect |
+|------|-------|--------|
+| (0,0) | 0 | rows[0]=true, cols[0]=true |
+| (0,3) | 0 | rows[0]=true, cols[3]=true |
+| others | ≠0 | no change |
+
+After pass 1: `rows = [T,F,F]`, `cols = [T,F,F,T]`.
+
+**Pass 2 — zero flagged cells** (set `matrix[r][c]=0` when `rows[r] || cols[c]`):
+
+| row r | rows[r]? | resulting row (col flagged at c=0 and c=3) |
+|-------|----------|--------------------------------------------|
+| 0 | true | [0,0,0,0] (whole row zeroed) |
+| 1 | false | [0,4,5,0] (only cols 0 and 3 zeroed) |
+| 2 | false | [0,3,1,0] (only cols 0 and 3 zeroed) |
+
+Result: `[[0,0,0,0],[0,4,5,0],[0,3,1,0]]` ✓
+
 ---
 
 ## Approach 2 — In-Place with First Row/Col (Recommended ✅)
@@ -98,6 +145,64 @@ The order matters: zero the first row/column AFTER using them as flags.
 ### Complexity
 - **Time:** O(m × n).
 - **Space:** O(1).
+
+### Code
+```go
+func inPlace(matrix [][]int) {
+	m, n := len(matrix), len(matrix[0])
+
+	// does column 0 need to be zeroed?
+	firstColZero := false
+	for r := 0; r < m; r++ {
+		if matrix[r][0] == 0 {
+			firstColZero = true
+			break
+		}
+	}
+
+	// does row 0 need to be zeroed?
+	firstRowZero := false
+	for c := 0; c < n; c++ {
+		if matrix[0][c] == 0 {
+			firstRowZero = true
+			break
+		}
+	}
+
+	// use first row and first column as flags for the rest of the matrix
+	for r := 1; r < m; r++ {
+		for c := 1; c < n; c++ {
+			if matrix[r][c] == 0 {
+				matrix[r][0] = 0 // flag row r
+				matrix[0][c] = 0 // flag col c
+			}
+		}
+	}
+
+	// zero interior cells based on flags
+	for r := 1; r < m; r++ {
+		for c := 1; c < n; c++ {
+			if matrix[r][0] == 0 || matrix[0][c] == 0 {
+				matrix[r][c] = 0
+			}
+		}
+	}
+
+	// zero first row if needed
+	if firstRowZero {
+		for c := 0; c < n; c++ {
+			matrix[0][c] = 0
+		}
+	}
+
+	// zero first column if needed
+	if firstColZero {
+		for r := 0; r < m; r++ {
+			matrix[r][0] = 0
+		}
+	}
+}
+```
 
 ### Dry Run — `matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]`
 ```

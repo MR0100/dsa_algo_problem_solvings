@@ -84,6 +84,39 @@ bt(path, visited):
 - **Time:** O(n! × n) — n! permutations × O(n) copy each.
 - **Space:** O(n) — visited array + recursion stack of depth n.
 
+### Code
+```go
+// backtracking solves Permutations by building each permutation position by
+// position, using a boolean visited array to track which elements are used.
+//
+// Time:  O(n! * n) — n! permutations, each costs O(n) to copy
+// Space: O(n) — recursion depth n; visited array n
+func backtracking(nums []int) [][]int {
+    n := len(nums)
+    var result [][]int
+    visited := make([]bool, n)
+
+    var bt func(path []int)
+    bt = func(path []int) {
+        if len(path) == n {
+            tmp := make([]int, n)
+            copy(tmp, path)
+            result = append(result, tmp)
+            return
+        }
+        for i := 0; i < n; i++ {
+            if !visited[i] {
+                visited[i] = true
+                bt(append(path, nums[i]))
+                visited[i] = false
+            }
+        }
+    }
+    bt(nil)
+    return result
+}
+```
+
 ### Dry Run — `nums = [1,2,3]`
 ```
 bt([], vis=[F,F,F]):
@@ -126,6 +159,23 @@ func swapBacktracking(nums []int) [][]int {
 }
 ```
 
+### Complexity
+- **Time:** O(n! × n) — n! leaves reached; each records a length-n copy in O(n).
+- **Space:** O(n) — recursion stack depth n; swaps mutate `nums` in place, no visited array.
+
+### Dry Run — `nums = [1,2,3]`
+| Call | `nums` on entry | Loop action | Recurse | On record |
+|------|-----------------|-------------|---------|-----------|
+| bt(0) | [1,2,3] | i=0 swap(0,0) → [1,2,3] | bt(1) | |
+| bt(1) | [1,2,3] | i=1 swap(1,1) → [1,2,3] | bt(2) | |
+| bt(2) | [1,2,3] | i=2 swap(2,2) → [1,2,3] | bt(3) | |
+| bt(3) | [1,2,3] | start==n | — | record [1,2,3] |
+| bt(2) | [1,2,3] | i=2 swap(1,2) → [1,3,2] | bt(3) | record [1,3,2]; restore [1,2,3] |
+| bt(1) | [1,2,3] | i=2 swap(0,2) → [3,2,1] | bt(1)… | eventually [3,2,1],[3,1,2]; restore |
+| bt(0) | [1,2,3] | i=1 swap(0,1) → [2,1,3] | bt(1)… | eventually [2,1,3],[2,3,1]; restore |
+
+Result (order of discovery): [1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,2,1],[3,1,2] — count 6 ✓
+
 ---
 
 ## Approach 3 — Iterative Insertion
@@ -136,6 +186,43 @@ Build all permutations incrementally. Start with `[[]]`. For each number, insert
 ### Complexity
 - **Time:** O(n! × n).
 - **Space:** O(n! × n) — all permutations stored simultaneously.
+
+### Code
+```go
+// iterative solves Permutations by iteratively inserting each number into every
+// possible position of existing permutations.
+//
+// Time:  O(n! * n)
+// Space: O(n! * n)
+func iterative(nums []int) [][]int {
+    result := [][]int{{}} // start with one empty permutation
+    for _, num := range nums {
+        var next [][]int
+        for _, perm := range result {
+            // insert num at every position in perm
+            for pos := 0; pos <= len(perm); pos++ {
+                newPerm := make([]int, len(perm)+1)
+                copy(newPerm[:pos], perm[:pos])
+                newPerm[pos] = num
+                copy(newPerm[pos+1:], perm[pos:])
+                next = append(next, newPerm)
+            }
+        }
+        result = next
+    }
+    return result
+}
+```
+
+### Dry Run — `nums = [1,2,3]`
+| Step | `num` | `result` before | Insert positions per perm | `result` after |
+|------|-------|-----------------|---------------------------|----------------|
+| init | — | — | — | [[]] |
+| 1 | 1 | [[]] | insert 1 into [] at pos 0 | [[1]] |
+| 2 | 2 | [[1]] | into [1] at pos 0,1 | [[2,1],[1,2]] |
+| 3 | 3 | [[2,1],[1,2]] | into [2,1] at 0,1,2; into [1,2] at 0,1,2 | [[3,2,1],[2,3,1],[2,1,3],[3,1,2],[1,3,2],[1,2,3]] |
+
+Result: 6 permutations ✓
 
 ---
 

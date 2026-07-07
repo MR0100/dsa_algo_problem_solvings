@@ -104,6 +104,47 @@ match(i, j):
 - **Time:** O(2^(m+n)) — every `*` doubles the branching.
 - **Space:** O(m+n) — maximum recursion depth.
 
+### Code
+```go
+func recursion(s, p string) bool {
+    return recurse(s, p, 0, 0)
+}
+
+func recurse(s, p string, i, j int) bool {
+    // Pattern exhausted: true only if string is also exhausted.
+    if j == len(p) {
+        return i == len(s)
+    }
+
+    // Does the current pattern character match the current string character?
+    firstMatch := i < len(s) && (p[j] == s[i] || p[j] == '.')
+
+    if j+1 < len(p) && p[j+1] == '*' {
+        // Two choices for '*':
+        //   1. Zero occurrences: skip the "x*" pair entirely.
+        //   2. One+ occurrences: if first char matches, consume one from s.
+        return recurse(s, p, i, j+2) || (firstMatch && recurse(s, p, i+1, j))
+    }
+
+    // No '*' following: must match current chars and advance both pointers.
+    return firstMatch && recurse(s, p, i+1, j+1)
+}
+```
+
+### Dry Run — `s = "aab"`, `p = "c*a*b"`
+Positions: `s[0..2]="aab"`, `p[0..4]="c*a*b"`. Call `recurse(i,j)`; `*` gives two branches (skip pair `j+2`, or consume `s[i]` on match).
+
+| call | firstMatch | p[j+1]=='*'? | branch taken | result |
+|------|-----------|--------------|--------------|--------|
+| `(0,0)` p='c' | s[0]='a'≠'c' → false | yes | skip → `(0,2)` (consume branch dead) | ← `(0,2)` |
+| `(0,2)` p='a' | s[0]='a'=='a' → true | yes | skip `(0,4)` false → consume `(1,2)` | ← `(1,2)` |
+| `(1,2)` p='a' | s[1]='a'=='a' → true | yes | skip `(1,4)` false → consume `(2,2)` | ← `(2,2)` |
+| `(2,2)` p='a' | s[2]='b'≠'a' → false | yes | skip → `(2,4)` (consume dead) | ← `(2,4)` |
+| `(2,4)` p='b' | s[2]='b'=='b' → true | no (j+1=5) | match → `(3,5)` | ← `(3,5)` |
+| `(3,5)` | j==len(p) | — | base: `i==len(s)` → 3==3 | **true** |
+
+The `true` at `(3,5)` propagates back up every consume branch → `recurse(0,0)=true` ✓
+
 ---
 
 ## Approach 2 — Top-Down DP (Memoisation)
@@ -114,6 +155,55 @@ Observation: the same `(i, j)` pair is computed many times. A 2-D memo array of 
 ### Complexity
 - **Time:** O(m×n) — at most `(m+1)(n+1)` unique states.
 - **Space:** O(m×n) — the memo table, plus O(m+n) call stack.
+
+### Code
+```go
+func topDownDP(s, p string) bool {
+    memo := make([][]int, len(s)+1)
+    for i := range memo {
+        memo[i] = make([]int, len(p)+1)
+        // 0 = unvisited, 1 = true, -1 = false
+    }
+    return memoRecurse(s, p, 0, 0, memo)
+}
+
+func memoRecurse(s, p string, i, j int, memo [][]int) bool {
+    if memo[i][j] != 0 {
+        return memo[i][j] == 1
+    }
+    var result bool
+    if j == len(p) {
+        result = i == len(s)
+    } else {
+        firstMatch := i < len(s) && (p[j] == s[i] || p[j] == '.')
+        if j+1 < len(p) && p[j+1] == '*' {
+            result = memoRecurse(s, p, i, j+2, memo) || (firstMatch && memoRecurse(s, p, i+1, j, memo))
+        } else {
+            result = firstMatch && memoRecurse(s, p, i+1, j+1, memo)
+        }
+    }
+    if result {
+        memo[i][j] = 1
+    } else {
+        memo[i][j] = -1
+    }
+    return result
+}
+```
+
+### Dry Run — `s = "aab"`, `p = "c*a*b"`
+Same recursion tree as Approach 1, but each `(i,j)` result is written to `memo` (0=unvisited, 1=true, -1=false) and reused. For this input every state happens to be visited once, so the memo mainly prevents re-expansion of the dead skip-branches.
+
+| order | call `(i,j)` | computed via | result | memo write |
+|-------|-------------|--------------|--------|------------|
+| 1 | `(0,0)` p='c',* | skip `(0,2)` | true | `memo[0][0]=1` |
+| 2 | `(0,2)` p='a',* | consume `(1,2)` | true | `memo[0][2]=1` |
+| 3 | `(1,2)` p='a',* | consume `(2,2)` | true | `memo[1][2]=1` |
+| 4 | `(2,2)` p='a',* | skip `(2,4)` | true | `memo[2][2]=1` |
+| 5 | `(2,4)` p='b' | match `(3,5)` | true | `memo[2][4]=1` |
+| 6 | `(3,5)` base | 3==len(s)=3 | true | `memo[3][5]=1` |
+
+Any later call to an already-solved `(i,j)` returns `memo[i][j]==1` immediately instead of recursing. Final answer `memoRecurse(0,0)=true` ✓
 
 ---
 

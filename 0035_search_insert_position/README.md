@@ -76,6 +76,29 @@ Scan forward; return the first index where `nums[i] >= target`, or `len(nums)` i
 - **Time:** O(n).
 - **Space:** O(1).
 
+### Code
+```go
+func linearScan(nums []int, target int) int {
+    for i, v := range nums {
+        if v >= target {
+            return i
+        }
+    }
+    return len(nums) // target is larger than all elements
+}
+```
+
+### Dry Run — `nums = [1,3,5,6]`, `target = 2`
+
+Scan left to right, return the first index whose value `≥ target`:
+
+| `i` | `v` | `v >= 2`? | Action |
+|-----|-----|-----------|--------|
+| 0 | 1 | no | continue |
+| 1 | 3 | yes | `return 1` |
+
+Result: **1** (2 would be inserted between 1 and 3).
+
 ---
 
 ## Approach 2 — Binary Search / Lower Bound (Recommended ✅)

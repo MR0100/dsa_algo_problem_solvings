@@ -80,6 +80,44 @@ Copy unique elements into a separate slice, then copy them back into `nums`. Eas
 - **Time:** O(n).
 - **Space:** O(n) — the extra slice.
 
+### Code
+```go
+func bruteForce(nums []int) int {
+    if len(nums) == 0 {
+        return 0
+    }
+    unique := []int{nums[0]}
+    for i := 1; i < len(nums); i++ {
+        if nums[i] != unique[len(unique)-1] { // new unique value
+            unique = append(unique, nums[i])
+        }
+    }
+    // copy unique values back into nums
+    for i, v := range unique {
+        nums[i] = v
+    }
+    return len(unique)
+}
+```
+
+### Dry Run — `nums = [0,0,1,1,1,2,2,3,3,4]`
+Build `unique`, appending only when `nums[i]` differs from `unique`'s last element:
+
+| i | nums[i] | last of `unique` | append? | `unique` after |
+|---|---------|------------------|---------|----------------|
+| — | 0 | — | seed | `[0]` |
+| 1 | 0 | 0 | no | `[0]` |
+| 2 | 1 | 0 | yes | `[0,1]` |
+| 3 | 1 | 1 | no | `[0,1]` |
+| 4 | 1 | 1 | no | `[0,1]` |
+| 5 | 2 | 1 | yes | `[0,1,2]` |
+| 6 | 2 | 2 | no | `[0,1,2]` |
+| 7 | 3 | 2 | yes | `[0,1,2,3]` |
+| 8 | 3 | 3 | no | `[0,1,2,3]` |
+| 9 | 4 | 3 | yes | `[0,1,2,3,4]` |
+
+Copy `unique` back into `nums[:5]`. **Result:** `k=5`, `nums=[0,1,2,3,4,...]` ✓
+
 ---
 
 ## Approach 2 — Two Pointers / Write Pointer (Recommended ✅)

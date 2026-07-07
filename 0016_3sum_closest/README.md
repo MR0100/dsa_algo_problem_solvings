@@ -74,6 +74,38 @@ Try all O(n³) triplets. Track the one with the smallest `|sum - target|`.
 - **Time:** O(n³).
 - **Space:** O(1).
 
+### Code
+```go
+func bruteForce(nums []int, target int) int {
+    n := len(nums)
+    closest := nums[0] + nums[1] + nums[2]
+    for i := 0; i < n-2; i++ {
+        for j := i + 1; j < n-1; j++ {
+            for k := j + 1; k < n; k++ {
+                sum := nums[i] + nums[j] + nums[k]
+                if abs(sum-target) < abs(closest-target) {
+                    closest = sum
+                }
+            }
+        }
+    }
+    return closest
+}
+```
+
+### Dry Run — `nums = [-1,2,1,-4]`, `target = 1` (no sort)
+
+`closest` initialised to `nums[0]+nums[1]+nums[2] = -1+2+1 = 2`.
+
+| i | j | k | sum | \|sum-1\| | \|closest-1\| | update? | closest |
+|---|---|---|-----|-----------|---------------|---------|---------|
+| 0 (-1) | 1 (2) | 2 (1)  | 2  | 1 | 1 | no (not strictly less) | 2 |
+| 0 (-1) | 1 (2) | 3 (-4) | -3 | 4 | 1 | no | 2 |
+| 0 (-1) | 2 (1) | 3 (-4) | -4 | 5 | 1 | no | 2 |
+| 1 (2)  | 2 (1) | 3 (-4) | -1 | 2 | 1 | no | 2 |
+
+Return `closest = 2`. ✓
+
 ---
 
 ## Approach 2 — Sort + Two Pointers (Recommended ✅)

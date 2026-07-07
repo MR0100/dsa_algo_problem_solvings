@@ -79,6 +79,61 @@ Try every even-length substring and validate it with a balance counter. O(n³) �
 - **Time:** O(n³).
 - **Space:** O(1).
 
+### Code
+```go
+// bruteForce solves Longest Valid Parentheses by checking every substring.
+//
+// Intuition: Try every possible start and end position; validate with a
+// balance counter; track the maximum valid length.
+//
+// Algorithm:
+//  1. For every pair (i, j) where j-i+1 is even: validate s[i..j].
+//  2. Validation: balance starts at 0; increment on '(', decrement on ')'.
+//     If balance < 0 at any point, invalid. Valid iff balance == 0 at end.
+//  3. Track max valid length.
+//
+// Time:  O(n³) — O(n²) substrings × O(n) validation
+// Space: O(1)
+func bruteForce(s string) int {
+	n := len(s)
+	best := 0
+	for i := 0; i < n; i++ {
+		balance := 0
+		for j := i; j < n; j++ {
+			if s[j] == '(' {
+				balance++
+			} else {
+				balance--
+			}
+			if balance < 0 {
+				break // can never recover
+			}
+			if balance == 0 {
+				length := j - i + 1
+				if length > best {
+					best = length
+				}
+			}
+		}
+	}
+	return best
+}
+```
+
+### Dry Run — `s = "(()"`
+For each start `i`, walk `j` forward maintaining `balance` (+1 on `(`, −1 on `)`); on `balance==0` record `j-i+1`; on `balance<0` break.
+
+| i | j | s[j] | balance | action |
+|---|---|------|---------|--------|
+| 0 | 0 | `(` | 1 | — |
+| 0 | 1 | `(` | 2 | — |
+| 0 | 2 | `)` | 1 | end of string, never 0 |
+| 1 | 1 | `(` | 1 | — |
+| 1 | 2 | `)` | 0 | length = 2-1+1 = 2 → best=2 |
+| 2 | 2 | `)` | -1 | balance<0 → break |
+
+Result: `best = 2` ✓
+
 ---
 
 ## Approach 2 — Stack
@@ -92,6 +147,49 @@ Initialize with `-1` as a sentinel.
 - `')'` → pop the top:
   - If stack is empty after pop: push current index (new unmatched base).
   - Else: `current_length = i - stack.top`.
+
+### Code
+```go
+// stackApproach solves Longest Valid Parentheses using a stack of indices.
+//
+// Intuition: Push indices onto a stack. The stack always holds the index of
+// the last "unmatched" character. When we find a matching pair, pop the top;
+// the length of the current valid substring is i - stack[top].
+//
+// Algorithm:
+//  1. Push -1 onto the stack as a sentinel (the "base" before any valid string).
+//  2. For each i:
+//     if s[i]=='(': push i.
+//     if s[i]==')':
+//       pop the top.
+//       if stack is empty: push i (new base).
+//       else: current valid length = i - stack[top].
+//  3. Return max length seen.
+//
+// Time:  O(n)
+// Space: O(n)
+func stackApproach(s string) int {
+	stack := []int{-1} // sentinel: base before valid substrings
+	best := 0
+	for i := 0; i < len(s); i++ {
+		if s[i] == '(' {
+			stack = append(stack, i) // push opening bracket index
+		} else {
+			// pop the matching '(' (or the base sentinel)
+			stack = stack[:len(stack)-1]
+			if len(stack) == 0 {
+				stack = append(stack, i) // this ')' is unmatched; becomes new base
+			} else {
+				length := i - stack[len(stack)-1] // distance from base to current index
+				if length > best {
+					best = length
+				}
+			}
+		}
+	}
+	return best
+}
+```
 
 ### Dry Run — `s = ")()())"`, target = 4
 ```
@@ -123,6 +221,42 @@ If `s[i] == ')'`:
 - If `s[j] == '('`: `dp[i] = dp[i-1] + 2 + (j>0 ? dp[j-1] : 0)`.
   - `dp[i-1] + 2`: current pair + the run to its left.
   - `dp[j-1]`: valid substring that ended just before the matching `(`.
+
+### Code
+```go
+// dpApproach solves Longest Valid Parentheses using a DP array.
+//
+// Intuition: dp[i] = length of the longest valid substring ending at index i.
+//   - If s[i] == '(': dp[i] = 0 (no valid string ends with '(').
+//   - If s[i] == ')':
+//       let j = i - dp[i-1] - 1 (the index just before the current valid suffix).
+//       if s[j] == '(': dp[i] = dp[i-1] + 2 + dp[j-1]
+//         (the current pair + the valid suffix before the pair + any valid
+//         substring that ended just before j).
+//
+// Time:  O(n)
+// Space: O(n)
+func dpApproach(s string) int {
+	n := len(s)
+	dp := make([]int, n) // dp[i] = longest valid substring ending at i
+	best := 0
+	for i := 1; i < n; i++ {
+		if s[i] == ')' {
+			j := i - dp[i-1] - 1 // index of the potential matching '('
+			if j >= 0 && s[j] == '(' {
+				dp[i] = dp[i-1] + 2 // match the pair
+				if j > 0 {
+					dp[i] += dp[j-1] // add valid substring before the '('
+				}
+			}
+		}
+		if dp[i] > best {
+			best = dp[i]
+		}
+	}
+	return best
+}
+```
 
 ### Dry Run — `s = "(()"`
 ```

@@ -91,6 +91,61 @@ Trim whitespace, call `strconv.ParseInt`. Map the range error to INT32 bounds.
 ### Limitation
 `strconv.ParseInt` fails entirely on strings like `"1337c0d3"` (it does not do partial parsing — it stops and errors). The correct `myAtoi` should return `1337`. This approach is included to show the stdlib's behavior and why a custom parser is necessary.
 
+### Complexity
+- **Time:** O(n) — linear scan to trim whitespace plus `strconv.ParseInt`'s own linear scan of the remaining string.
+- **Space:** O(1) — only the reslice offset and the parsed `int64`; no extra allocation.
+
+### Code
+```go
+func useStdlib(s string) int {
+    // Trim leading whitespace.
+    i := 0
+    for i < len(s) && s[i] == ' ' {
+        i++
+    }
+    s = s[i:]
+
+    val, err := strconv.ParseInt(s, 10, 64)
+    if err != nil {
+        // Range error: clamp.
+        if numErr, ok := err.(*strconv.NumError); ok && numErr.Err == strconv.ErrRange {
+            if len(s) > 0 && s[0] == '-' {
+                return math.MinInt32
+            }
+            return math.MaxInt32
+        }
+        // Syntax error: partial parse — strconv doesn't do partial parse like atoi.
+        // Fall back to 0 for this approximation.
+        return 0
+    }
+    if val > math.MaxInt32 {
+        return math.MaxInt32
+    }
+    if val < math.MinInt32 {
+        return math.MinInt32
+    }
+    return int(val)
+}
+```
+
+### Dry Run — `s = "   -042"`
+```
+Trim whitespace: i advances over 3 spaces → s = "-042"
+strconv.ParseInt("-042", 10, 64):
+  sees '-' → negative, then digits 0,4,2 → val = -42, err = nil
+err == nil, so no clamp path
+val=-42 is within [MinInt32, MaxInt32]
+return int(-42) = -42 ✓
+```
+
+| step        | s / val      | note                              |
+|-------------|--------------|-----------------------------------|
+| trim spaces | `"-042"`     | i skipped 3 leading spaces        |
+| ParseInt    | `val=-42`    | whole remaining string is numeric |
+| err check   | `err==nil`   | no range/syntax error             |
+| clamp check | within range | -42 ∈ [MinInt32, MaxInt32]        |
+| return      | `-42`        | int(val)                          |
+
 ---
 
 ## Approach 2 — Manual Linear Scan (Correct ✅)

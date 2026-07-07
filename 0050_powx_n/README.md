@@ -76,8 +76,41 @@ Explanation: 2⁻² = 1/4 = 0.25
 Multiply `x` by itself `|n|` times. If `n < 0`, compute `(1/x)^|n|`.
 
 ### Complexity
-- **Time:** O(|n|) — up to 2³¹ multiplications. **TLE.**
+- **Time:** O(|n|) — one multiplication per unit of |n| (up to 2³¹). **TLE.**
 - **Space:** O(1).
+
+### Code
+```go
+func bruteForce(x float64, n int) float64 {
+    if n < 0 {
+        x = 1 / x
+        n = -n
+    }
+    result := 1.0
+    for i := 0; i < n; i++ {
+        result *= x
+    }
+    return result
+}
+```
+
+### Dry Run — `x = 2.0`, `n = 10`
+n ≥ 0, so no reciprocal. Loop `result *= x`, 10 times:
+
+| i | `result` before | `result` after |
+|---|-----------------|----------------|
+| 0 | 1 | 2 |
+| 1 | 2 | 4 |
+| 2 | 4 | 8 |
+| 3 | 8 | 16 |
+| 4 | 16 | 32 |
+| 5 | 32 | 64 |
+| 6 | 64 | 128 |
+| 7 | 128 | 256 |
+| 8 | 256 | 512 |
+| 9 | 512 | 1024 |
+
+Result: 1024.0 ✓ (for n = −2 the guard first sets x = 1/x, n = 2, then multiplies.)
 
 ---
 
@@ -151,8 +184,23 @@ func fastPowRecursive(x float64, n int) float64 {
 ```
 
 ### Complexity
-- **Time:** O(log n).
+- **Time:** O(log n) — even steps halve n; each odd step (n→n-1) is followed by an even one, so O(log n) recursive frames.
 - **Space:** O(log n) — call stack depth.
+
+### Dry Run — `x = 2.0`, `n = 10`
+As implemented in `main.go`: even n → `half*half` with `half = pow(x, n/2)`; odd n → `x * pow(x, n-1)`.
+
+| Call | n | branch | returns |
+|------|---|--------|---------|
+| pow(2,10) | 10 | even → half=pow(2,5) | half*half |
+| pow(2,5) | 5 | odd → 2 * pow(2,4) | 2 * 16 = 32 |
+| pow(2,4) | 4 | even → half=pow(2,2) | half*half |
+| pow(2,2) | 2 | even → half=pow(2,1) | half*half |
+| pow(2,1) | 1 | odd → 2 * pow(2,0) | 2 * 1 = 2 |
+| pow(2,0) | 0 | base case | 1 |
+
+Unwinding: pow(2,1)=2 → pow(2,2)=2*2=4 → pow(2,4)=4*4=16 → pow(2,5)=2*16=32 → pow(2,10)=32*32=1024.
+Result: 1024.0 ✓
 
 ---
 

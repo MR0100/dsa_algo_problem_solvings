@@ -174,6 +174,36 @@ Only the current row `dp[i][*]` and the previous row `dp[i-1][*]` are needed. Us
 - **Time:** O(m×n)
 - **Space:** O(n)
 
+### Code
+```go
+func isInterleaveO1(s1 string, s2 string, s3 string) bool {
+    m, n := len(s1), len(s2)
+    if m+n != len(s3) { return false }
+    dp := make([]bool, n+1)
+    dp[0] = true
+    for j := 1; j <= n; j++ { dp[j] = dp[j-1] && s2[j-1] == s3[j-1] }
+    for i := 1; i <= m; i++ {
+        dp[0] = dp[0] && s1[i-1] == s3[i-1]
+        for j := 1; j <= n; j++ {
+            dp[j] = (dp[j] && s1[i-1] == s3[i+j-1]) || (dp[j-1] && s2[j-1] == s3[i+j-1])
+        }
+    }
+    return dp[n]
+}
+```
+
+### Dry Run — `s1="a", s2="b", s3="ab"` (m=1, n=1)
+
+`dp` is a single row of length `n+1 = 2`; before row `i` it holds row `i-1`, and after the inner loop it holds row `i`.
+
+| Step | Action | `dp` (index 0,1) | Note |
+|------|--------|------------------|------|
+| init | `dp[0]=true` | `[T, F]` | dp[0] = empty/empty |
+| seed row 0 | j=1: `dp[1] = dp[0] && s2[0]('b')==s3[0]('a')` → `T && false` | `[T, F]` | using only s2; 'b'≠'a' |
+| i=1 | `dp[0] = dp[0] && s1[0]('a')==s3[0]('a')` → `T && true` | `[T, F]` | prefix of s1 matches s3[0] |
+| i=1, j=1 | `dp[1] = (dp[1]('F') && s1[0]=='a'==s3[1]('b')) \|\| (dp[0]('T') && s2[0]('b')==s3[1]('b'))` → `F \|\| (T && true)` | `[T, T]` | take last char 'b' from s2 |
+| result | `dp[n]=dp[1]` | `T` | returns **true** ✓ |
+
 ---
 
 ## Key Takeaways

@@ -86,6 +86,49 @@ return dp[m-1][n-1]
 - **Time:** O(m × n).
 - **Space:** O(m × n).
 
+### Code
+```go
+// dpBottomUp solves Unique Paths II (with obstacles) using a 2D DP table.
+//
+// Time:  O(m × n)
+// Space: O(m × n)
+func dpBottomUp(obstacleGrid [][]int) int {
+	m, n := len(obstacleGrid), len(obstacleGrid[0])
+	dp := make([][]int, m)
+	for i := range dp {
+		dp[i] = make([]int, n)
+	}
+
+	// starting cell
+	if obstacleGrid[0][0] == 1 {
+		return 0
+	}
+	dp[0][0] = 1
+
+	// first column: blocked by any obstacle in the column above
+	for r := 1; r < m; r++ {
+		if obstacleGrid[r][0] == 0 {
+			dp[r][0] = dp[r-1][0]
+		}
+	}
+	// first row
+	for c := 1; c < n; c++ {
+		if obstacleGrid[0][c] == 0 {
+			dp[0][c] = dp[0][c-1]
+		}
+	}
+	// rest of the grid
+	for r := 1; r < m; r++ {
+		for c := 1; c < n; c++ {
+			if obstacleGrid[r][c] == 0 {
+				dp[r][c] = dp[r-1][c] + dp[r][c-1]
+			}
+		}
+	}
+	return dp[m-1][n-1]
+}
+```
+
 ### Dry Run — `obstacleGrid = [[0,0,0],[0,1,0],[0,0,0]]`
 ```
 dp[0] = [1,1,1]  (first row: no obstacles)
@@ -107,6 +150,58 @@ Same recurrence with one array. When an obstacle is encountered, set `dp[c] = 0`
 ### Complexity
 - **Time:** O(m × n).
 - **Space:** O(n).
+
+### Code
+```go
+// dpRolling solves Unique Paths II with O(n) space.
+//
+// Time:  O(m × n)
+// Space: O(n)
+func dpRolling(obstacleGrid [][]int) int {
+	m, n := len(obstacleGrid), len(obstacleGrid[0])
+	if obstacleGrid[0][0] == 1 {
+		return 0
+	}
+	dp := make([]int, n)
+	dp[0] = 1 // starting cell
+
+	// initialize first row
+	for c := 1; c < n; c++ {
+		if obstacleGrid[0][c] == 1 {
+			dp[c] = 0
+		} else {
+			dp[c] = dp[c-1]
+		}
+	}
+
+	for r := 1; r < m; r++ {
+		// update first column
+		if obstacleGrid[r][0] == 1 {
+			dp[0] = 0
+		}
+		for c := 1; c < n; c++ {
+			if obstacleGrid[r][c] == 1 {
+				dp[c] = 0
+			} else {
+				dp[c] += dp[c-1]
+			}
+		}
+	}
+	return dp[n-1]
+}
+```
+
+### Dry Run — `obstacleGrid = [[0,0,0],[0,1,0],[0,0,0]]`
+
+Single array `dp` of length `n=3`. `dp[0]=1`, then first row filled by `dp[c]=dp[c-1]` (no obstacles). Each later row updates in place: obstacle → `dp[c]=0`, else `dp[c] += dp[c-1]`.
+
+| after processing | dp = [dp[0], dp[1], dp[2]] |
+|------------------|-----------------------------|
+| init first row (0,·) | [1, 1, 1] |
+| row 1: c=0 no obstacle (dp[0] stays 1); c=1 obstacle → 0; c=2 → dp[2]+dp[1] = 1+0 | [1, 0, 1] |
+| row 2: c=0 no obstacle (1); c=1 → dp[1]+dp[0] = 0+1; c=2 → dp[2]+dp[1] = 1+1 | [1, 1, 2] |
+
+`dp[n-1] = dp[2] = 2` ✓
 
 ---
 

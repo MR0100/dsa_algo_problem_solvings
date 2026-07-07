@@ -93,6 +93,67 @@ A valid window has exactly `k * wordLen` characters. Check every possible starti
 - **Time:** O(n·k·wordLen) — n windows × k word extractions × wordLen for map lookup.
 - **Space:** O(k) — the frequency maps.
 
+### Code
+```go
+func bruteForce(s string, words []string) []int {
+    if len(s) == 0 || len(words) == 0 {
+        return nil
+    }
+    wordLen := len(words[0])
+    k := len(words)
+    total := wordLen * k
+
+    // build required frequency map
+    need := make(map[string]int)
+    for _, w := range words {
+        need[w]++
+    }
+
+    var result []int
+    for i := 0; i <= len(s)-total; i++ {
+        have := make(map[string]int)
+        j := 0
+        for j < k {
+            word := s[i+j*wordLen : i+j*wordLen+wordLen] // extract j-th word in window
+            if need[word] == 0 {                           // word not in words list
+                break
+            }
+            have[word]++
+            if have[word] > need[word] { // word appears too many times
+                break
+            }
+            j++
+        }
+        if j == k { // all k words matched
+            result = append(result, i)
+        }
+    }
+    return result
+}
+```
+
+### Dry Run — `s="barfoothefoobarman"`, `words=["foo","bar"]`
+
+`wordLen=3, k=2, total=6, need={foo:1,bar:1}`. Windows of length 6, start `i` in `[0 .. 12]`.
+
+| i | window `s[i..i+5]` | words extracted | have valid? | record? |
+|---|--------------------|-----------------|-------------|---------|
+| 0 | `barfoo` | bar, foo | both in need, counts ok → j=k | **append 0** |
+| 1 | `arfoot` | arf → not in need | break | no |
+| 2 | `rfooth` | rfo → not in need | break | no |
+| 3 | `foothe` | foo(ok), the → not in need | break | no |
+| 4 | `oothef` | oot → not in need | break | no |
+| 5 | `othefo` | oth → not in need | break | no |
+| 6 | `thefoo` | the → not in need | break | no |
+| 7 | `hefoob` | hef → not in need | break | no |
+| 8 | `efooba` | efo → not in need | break | no |
+| 9 | `foobar` | foo, bar | both in need, counts ok → j=k | **append 9** |
+| 10 | `oobarm` | oob → not in need | break | no |
+| 11 | `obarma` | oba → not in need | break | no |
+| 12 | `barman` | bar(ok), man → not in need | break | no |
+
+Result: `[0, 9]` ✓
+
 ---
 
 ## Approach 2 — Sliding Window per Offset (Recommended ✅)

@@ -148,6 +148,13 @@ Returns false ✓.
 
 ## Approach 3 — Iterative Inorder
 
+### Intuition
+Same idea as Approach 1 — a valid BST yields a strictly increasing inorder sequence — but the traversal is driven by an explicit stack instead of recursion. Push left spine, pop to "visit", compare with `prev`, then descend right.
+
+### Complexity
+- **Time:** O(n) — each node is pushed and popped exactly once.
+- **Space:** O(h) — the stack holds at most one root-to-leaf path.
+
 ### Code
 ```go
 func isValidBSTIterative(root *TreeNode) bool {
@@ -161,6 +168,18 @@ func isValidBSTIterative(root *TreeNode) bool {
     return true
 }
 ```
+
+### Dry Run (root=[5,1,4,null,null,3,6])
+
+Tree: root 5, left 1, right 4 (4.left=3, 4.right=6).
+
+| Step | `curr` before | Stack after push-left | Popped (visit) | `prev` check | `prev` after | Next `curr` |
+|------|---------------|------------------------|----------------|--------------|--------------|-------------|
+| 1 | 5 | [5, 1] | 1 | 1 ≤ -∞? no | 1 | 1.Right = nil |
+| 2 | nil | [5] | 5 | 5 ≤ 1? no | 5 | 5.Right = 4 |
+| 3 | 4 | [4, 3] | 3 | 3 ≤ 5? **yes** | — | **return false** ✓ |
+
+The visit order 1, 5, 3 breaks the increasing rule at 3 (≤ prev 5), so the tree is invalid.
 
 ---
 

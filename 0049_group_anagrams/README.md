@@ -87,6 +87,40 @@ return groups.values()
 - **Time:** O(n × k log k) — n strings, each sorted in O(k log k).
 - **Space:** O(n × k) — map storage.
 
+### Code
+```go
+func groupBySorted(strs []string) [][]string {
+    groups := make(map[string][]string)
+    for _, s := range strs {
+        key := sortedKey(s)
+        groups[key] = append(groups[key], s)
+    }
+    result := make([][]string, 0, len(groups))
+    for _, g := range groups {
+        result = append(result, g)
+    }
+    return result
+}
+
+func sortedKey(s string) string {
+    b := []byte(s)
+    sort.Slice(b, func(i, j int) bool { return b[i] < b[j] })
+    return string(b)
+}
+```
+
+### Dry Run — `strs = ["eat","tea","tan","ate","nat","bat"]`
+| String | `sortedKey` | `groups` after |
+|--------|-------------|----------------|
+| "eat" | "aet" | {aet:["eat"]} |
+| "tea" | "aet" | {aet:["eat","tea"]} |
+| "tan" | "ant" | {aet:[…], ant:["tan"]} |
+| "ate" | "aet" | {aet:["eat","tea","ate"], ant:["tan"]} |
+| "nat" | "ant" | {aet:[…], ant:["tan","nat"]} |
+| "bat" | "abt" | {aet:[…], ant:["tan","nat"], abt:["bat"]} |
+
+Collect map values → [["eat","tea","ate"],["tan","nat"],["bat"]] — 3 groups ✓
+
 ---
 
 ## Approach 2 — Frequency Array as Key (Recommended ✅)

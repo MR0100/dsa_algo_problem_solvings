@@ -73,6 +73,52 @@ Run standard backtracking (each element used at most once → recurse with `i+1`
 - **Time:** O(2^N × N) — 2^N subsets, each takes O(N) to stringify for the map.
 - **Space:** O(2^N × N) — the dedup map.
 
+### Code
+```go
+func bruteForce(candidates []int, target int) [][]int {
+    sort.Ints(candidates)
+    seen := map[string]bool{}
+    var result [][]int
+    var bt func(start, remaining int, path []int)
+    bt = func(start, remaining int, path []int) {
+        if remaining == 0 {
+            // encode the combo as a string key for dedup
+            key := fmt.Sprint(path)
+            if !seen[key] {
+                seen[key] = true
+                tmp := make([]int, len(path))
+                copy(tmp, path)
+                result = append(result, tmp)
+            }
+            return
+        }
+        for i := start; i < len(candidates); i++ {
+            if candidates[i] > remaining {
+                break
+            }
+            bt(i+1, remaining-candidates[i], append(path, candidates[i]))
+        }
+    }
+    bt(0, target, nil)
+    return result
+}
+```
+
+### Dry Run — `candidates = [10,1,2,7,6,1,5]` sorted → `[1,1,2,5,6,7,10]`, `target = 8`
+
+No skip-dup guard here — every branch is explored (advancing `i+1`), and the map `seen` filters out combinations that stringify to a key already recorded.
+
+| Step | Call | Action | `seen` after | `result` after |
+|------|------|--------|--------------|----------------|
+| 1 | reach `remaining=0` via `[1,1,6]` | key `[1 1 6]` new → record | `{[1 1 6]}` | `[[1 1 6]]` |
+| 2 | reach `remaining=0` via `[1,2,5]` | key `[1 2 5]` new → record | `+[1 2 5]` | `[[1 1 6] [1 2 5]]` |
+| 3 | reach `remaining=0` via `[1,7]` | key `[1 7]` new → record | `+[1 7]` | `[[1 1 6] [1 2 5] [1 7]]` |
+| 4 | second `1` branch reaches `[1,2,5]` again (starting from the 2nd `1`) | key `[1 2 5]` already in `seen` → skip | unchanged | unchanged |
+| 5 | second `1` branch reaches `[1,7]` again | key `[1 7]` already in `seen` → skip | unchanged | unchanged |
+| 6 | reach `remaining=0` via `[2,6]` | key `[2 6]` new → record | `+[2 6]` | `[[1 1 6] [1 2 5] [1 7] [2 6]]` |
+
+Result: `[[1 1 6] [1 2 5] [1 7] [2 6]]` ✓ — the map absorbs the duplicate `[1 2 5]` and `[1 7]` that the two identical `1`s would otherwise produce.
+
 ---
 
 ## Approach 2 — Backtracking with Skip-Duplicate Pruning (Recommended ✅)

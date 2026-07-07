@@ -76,6 +76,56 @@ while num <= n²:
 - **Time:** O(n²) — each of the n² cells written once.
 - **Space:** O(n²) — the output matrix.
 
+### Code
+```go
+// layerFill solves Spiral Matrix II by filling an n×n matrix in spiral order
+// using the same boundary-shrinking technique as #54 (Spiral Matrix).
+//
+// Time:  O(n²) — each cell filled once.
+// Space: O(n²) — the output matrix.
+func layerFill(n int) [][]int {
+	matrix := make([][]int, n)
+	for i := range matrix {
+		matrix[i] = make([]int, n)
+	}
+
+	num := 1
+	top, bottom, left, right := 0, n-1, 0, n-1
+
+	for num <= n*n {
+		// fill right across top row
+		for c := left; c <= right && num <= n*n; c++ {
+			matrix[top][c] = num
+			num++
+		}
+		top++
+
+		// fill down right column
+		for r := top; r <= bottom && num <= n*n; r++ {
+			matrix[r][right] = num
+			num++
+		}
+		right--
+
+		// fill left across bottom row
+		for c := right; c >= left && num <= n*n; c-- {
+			matrix[bottom][c] = num
+			num++
+		}
+		bottom--
+
+		// fill up left column
+		for r := bottom; r >= top && num <= n*n; r-- {
+			matrix[r][left] = num
+			num++
+		}
+		left++
+	}
+
+	return matrix
+}
+```
+
 ### Dry Run — `n = 3`
 ```
 Initial: top=0, bottom=2, left=0, right=2, num=1
@@ -105,6 +155,56 @@ Zero serves as the "unvisited" marker since valid fill values start at 1.
 ### Complexity
 - **Time:** O(n²).
 - **Space:** O(n²).
+
+### Code
+```go
+// simulation solves Spiral Matrix II by walking with a direction vector and
+// turning right when blocked or out of bounds.
+//
+// Time:  O(n²)
+// Space: O(n²)
+func simulation(n int) [][]int {
+	matrix := make([][]int, n)
+	for i := range matrix {
+		matrix[i] = make([]int, n)
+	}
+
+	dr := []int{0, 1, 0, -1} // right, down, left, up
+	dc := []int{1, 0, -1, 0}
+	dir := 0
+	r, c := 0, 0
+
+	for num := 1; num <= n*n; num++ {
+		matrix[r][c] = num
+		nr, nc := r+dr[dir], c+dc[dir]
+		if nr < 0 || nr >= n || nc < 0 || nc >= n || matrix[nr][nc] != 0 {
+			dir = (dir + 1) % 4 // turn right
+			nr, nc = r+dr[dir], c+dc[dir]
+		}
+		r, c = nr, nc
+	}
+
+	return matrix
+}
+```
+
+### Dry Run — `n = 3`
+
+Directions cycle right(0)→down(1)→left(2)→up(3). Turn when the next cell is out of bounds or already non-zero.
+
+| num | write (r,c) | value | next (nr,nc) via dir | blocked? | new dir | move to (r,c) |
+|-----|-------------|-------|----------------------|----------|---------|---------------|
+| 1 | (0,0) | 1 | dir0 →(0,1) | no | 0 | (0,1) |
+| 2 | (0,1) | 2 | dir0 →(0,2) | no | 0 | (0,2) |
+| 3 | (0,2) | 3 | dir0 →(0,3) oob | yes | 1 (down) | (1,2) |
+| 4 | (1,2) | 4 | dir1 →(2,2) | no | 1 | (2,2) |
+| 5 | (2,2) | 5 | dir1 →(3,2) oob | yes | 2 (left) | (2,1) |
+| 6 | (2,1) | 6 | dir2 →(2,0) | no | 2 | (2,0) |
+| 7 | (2,0) | 7 | dir2 →(2,-1) oob | yes | 3 (up) | (1,0) |
+| 8 | (1,0) | 8 | dir3 →(0,0) filled | yes | 0 (right) | (1,1) |
+| 9 | (1,1) | 9 | loop ends (num=9=n²) | — | — | — |
+
+Result: `[[1,2,3],[8,9,4],[7,6,5]]` ✓
 
 ---
 

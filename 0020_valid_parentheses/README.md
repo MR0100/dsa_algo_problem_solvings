@@ -133,6 +133,40 @@ For **single bracket type** only (e.g. only `()`): increment on `(`, decrement o
 
 Included here to demonstrate concretely why a stack is required for multiple bracket types.
 
+### Complexity
+- **Time:** O(n) — one pass over the string.
+- **Space:** O(1) — only a single integer counter.
+
+### Code
+```go
+func counterApproach(s string) bool {
+    count := 0
+    for i := 0; i < len(s); i++ {
+        switch s[i] {
+        case '(', '[', '{':
+            count++
+        case ')', ']', '}':
+            count--
+            if count < 0 { return false }
+        }
+    }
+    return count == 0
+}
+```
+
+### Dry Run — `s = "([)]"` (shows the counter's blind spot)
+
+The counter only tracks how many brackets are open, never which type — so it returns `true` for a string that is actually invalid.
+
+| i | s[i] | action | count |
+|---|------|--------|-------|
+| 0 | `(` | opener → count++ | 1 |
+| 1 | `[` | opener → count++ | 2 |
+| 2 | `)` | closer → count-- (not < 0) | 1 |
+| 3 | `]` | closer → count-- (not < 0) | 0 |
+
+End: `count == 0` → returns **true**. But `"([)]"` is invalid (`)` closes before `[` is matched). Approach 1's stack catches this at i=2 by comparing the top; the counter cannot. This is the concrete demonstration of why a stack is required.
+
 ---
 
 ## Key Takeaways

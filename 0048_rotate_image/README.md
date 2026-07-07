@@ -68,8 +68,45 @@ Output:           [[15,13,2,5],[14,3,4,1],[12,6,8,9],[16,7,10,11]]
 For a 90° clockwise rotation: element at `(r, c)` moves to `(c, n-1-r)`. Use an extra matrix.
 
 ### Complexity
-- **Time:** O(n²).
-- **Space:** O(n²).
+- **Time:** O(n²) — visit every one of the n² cells once.
+- **Space:** O(n²) — the `tmp` matrix copy.
+
+### Code
+```go
+func extraMatrix(matrix [][]int) {
+    n := len(matrix)
+    tmp := make([][]int, n)
+    for i := range tmp {
+        tmp[i] = make([]int, n)
+    }
+    for r := 0; r < n; r++ {
+        for c := 0; c < n; c++ {
+            tmp[c][n-1-r] = matrix[r][c] // rotate clockwise
+        }
+    }
+    for r := 0; r < n; r++ {
+        copy(matrix[r], tmp[r])
+    }
+}
+```
+
+### Dry Run — `matrix = [[1,2,3],[4,5,6],[7,8,9]]`
+Rule: `tmp[c][n-1-r] = matrix[r][c]`, n=3.
+
+| (r,c) | value | target (c, n-1-r) | tmp after |
+|-------|-------|-------------------|-----------|
+| (0,0) | 1 | (0,2) | tmp[0][2]=1 |
+| (0,1) | 2 | (1,2) | tmp[1][2]=2 |
+| (0,2) | 3 | (2,2) | tmp[2][2]=3 |
+| (1,0) | 4 | (0,1) | tmp[0][1]=4 |
+| (1,1) | 5 | (1,1) | tmp[1][1]=5 |
+| (1,2) | 6 | (2,1) | tmp[2][1]=6 |
+| (2,0) | 7 | (0,0) | tmp[0][0]=7 |
+| (2,1) | 8 | (1,0) | tmp[1][0]=8 |
+| (2,2) | 9 | (2,0) | tmp[2][0]=9 |
+
+`tmp` = [[7,4,1],[8,5,2],[9,6,3]] → copied back into `matrix`.
+Result: [[7,4,1],[8,5,2],[9,6,3]] ✓
 
 ---
 

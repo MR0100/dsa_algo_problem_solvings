@@ -79,6 +79,50 @@ Division is "how many times does divisor fit into dividend?" Simply subtract div
 - **Time:** O(|dividend/divisor|) — up to 2³¹ iterations in the worst case (`MinInt32 / 1`). **TLE in practice.**
 - **Space:** O(1).
 
+### Code
+```go
+func bruteForce(dividend, divisor int) int {
+    // special case: only overflow possible
+    if dividend == math.MinInt32 && divisor == -1 {
+        return math.MaxInt32
+    }
+    // determine sign of result
+    negative := (dividend < 0) != (divisor < 0)
+
+    // work in int64 to avoid overflow when negating MinInt32
+    a, b := int64(dividend), int64(divisor)
+    if a < 0 {
+        a = -a
+    }
+    if b < 0 {
+        b = -b
+    }
+
+    count := int64(0)
+    for a >= b {
+        a -= b
+        count++
+    }
+
+    if negative {
+        return int(-count)
+    }
+    return int(count)
+}
+```
+
+### Dry Run — `dividend = 10, divisor = 3`
+`negative=false`; work with `a=10, b=3`.
+
+| iteration | a (before) | a -= b | count |
+|-----------|-----------|--------|-------|
+| 1 | 10 | 10-3=7 | 1 |
+| 2 | 7  | 7-3=4  | 2 |
+| 3 | 4  | 4-3=1  | 3 |
+| — | 1 < 3 → stop | — | 3 |
+
+Sign positive → `return 3`. ✓
+
 ---
 
 ## Approach 2 — Bit Shifting (Recommended ✅)

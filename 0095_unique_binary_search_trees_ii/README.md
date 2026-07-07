@@ -152,6 +152,25 @@ func generateTreesMemo(n int) []*TreeNode {
 }
 ```
 
+### Dry Run (n=3)
+
+Same divide-and-conquer as Approach 1, but each `(start,end)` result is stored in `memo` and reused on a repeat call instead of being rebuilt.
+
+| call `generate(start,end)` | in memo? | action | result stored | count |
+|----------------------------|----------|--------|---------------|-------|
+| `(1,3)`                     | no       | compute; try roots 1,2,3 | `[5 trees]` | 5 |
+| ↳ `(1,0)` (left of root 1)  | no       | start>end base case | `[nil]` | 1 |
+| ↳ `(2,3)` (right of root 1) | no       | compute; try roots 2,3 | `[2 trees]` | 2 |
+| ↳↳ `(3,3)`                  | no       | compute → `{3}` | `[{3}]` | 1 |
+| ↳↳ `(2,2)`                  | no       | compute → `{2}` | `[{2}]` | 1 |
+| ↳ `(1,1)` (left of root 2)  | no       | compute → `{1}` | `[{1}]` | 1 |
+| ↳ `(3,3)` (right of root 2) | **yes**  | reuse cached `[{3}]` | — | 1 |
+| ↳ `(1,2)` (left of root 3)  | no       | compute; try roots 1,2 | `[2 trees]` | 2 |
+| ↳↳ `(2,2)`                  | **yes**  | reuse cached `[{2}]` | — | 1 |
+| ↳↳ `(1,1)`                  | **yes**  | reuse cached `[{1}]` | — | 1 |
+
+`generate(1,3)` returns 5 trees ✓ — identical output to Approach 1, but `(3,3)`, `(2,2)`, `(1,1)` are each computed once and served from `memo` thereafter.
+
 ---
 
 ## Key Takeaways

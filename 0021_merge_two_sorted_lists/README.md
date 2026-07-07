@@ -146,6 +146,35 @@ merge(l1, l2):
 - **Time:** O(m+n).
 - **Space:** O(m+n) — recursion stack depth equals total nodes.
 
+### Code
+```go
+func recursive(list1, list2 *ListNode) *ListNode {
+    if list1 == nil { return list2 }
+    if list2 == nil { return list1 }
+    if list1.Val <= list2.Val {
+        list1.Next = recursive(list1.Next, list2)
+        return list1
+    }
+    list2.Next = recursive(list1, list2.Next)
+    return list2
+}
+```
+
+### Dry Run — `list1=[1,2,4]`, `list2=[1,3,4]`
+
+Each call picks the smaller head, then recurses on the remainder. Frames shown as they unwind (deepest returns first, feeding the `Next` link back up).
+
+| Call | list1 | list2 | comparison | picks | recurse on | returns |
+|------|-------|-------|-----------|-------|-----------|---------|
+| 1 | [1,2,4] | [1,3,4] | 1 ≤ 1 | list1's 1 | (list1.Next=[2,4], list2=[1,3,4]) | 1 → (call 2) |
+| 2 | [2,4] | [1,3,4] | 2 > 1 | list2's 1 | (list1=[2,4], list2.Next=[3,4]) | 1 → (call 3) |
+| 3 | [2,4] | [3,4] | 2 ≤ 3 | list1's 2 | (list1.Next=[4], list2=[3,4]) | 2 → (call 4) |
+| 4 | [4] | [3,4] | 4 > 3 | list2's 3 | (list1=[4], list2.Next=[4]) | 3 → (call 5) |
+| 5 | [4] | [4] | 4 ≤ 4 | list1's 4 | (list1.Next=nil, list2=[4]) | 4 → (call 6) |
+| 6 | nil | [4] | list1==nil | — | — | returns list2 = [4] |
+
+Unwinding links the picks in order: `1 → 1 → 2 → 3 → 4 → 4`. ✓
+
 ---
 
 ## Key Takeaways

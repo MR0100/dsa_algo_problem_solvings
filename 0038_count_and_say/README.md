@@ -142,6 +142,57 @@ n=5: rle("1211") → one 1, one 2, two 1s → "111221"
 - **Time:** O(n × L).
 - **Space:** O(n × L) — the call stack holds n strings simultaneously.
 
+### Code
+```go
+func recursive(n int) string {
+    if n == 1 {
+        return "1"
+    }
+    return rle(recursive(n - 1))
+}
+
+// rle returns the run-length encoding of s.
+func rle(s string) string {
+    var sb strings.Builder
+    j := 0
+    for j < len(s) {
+        ch := s[j]
+        count := 1
+        for j+count < len(s) && s[j+count] == ch { // count the run
+            count++
+        }
+        sb.WriteByte(byte('0' + count)) // write count
+        sb.WriteByte(ch)                // write digit
+        j += count
+    }
+    return sb.String()
+}
+```
+
+### Dry Run — `recursive(5)`
+Calls unwind to the base case `n==1`, then each level applies `rle` to the value returned from below.
+
+**Descent (recursion goes down to the base case):**
+
+| call | n | action |
+|------|---|--------|
+| recursive(5) | 5 | needs rle(recursive(4)) |
+| recursive(4) | 4 | needs rle(recursive(3)) |
+| recursive(3) | 3 | needs rle(recursive(2)) |
+| recursive(2) | 2 | needs rle(recursive(1)) |
+| recursive(1) | 1 | base case → return `"1"` |
+
+**Return (each level applies rle to the value from below):**
+
+| returning call | rle(input) | says | result |
+|----------------|-----------|------|--------|
+| recursive(2) | rle("1")    | one 1              | `"11"` |
+| recursive(3) | rle("11")   | two 1s             | `"21"` |
+| recursive(4) | rle("21")   | one 2, one 1       | `"1211"` |
+| recursive(5) | rle("1211") | one 1, one 2, two 1s | `"111221"` |
+
+Final answer: `"111221"` ✓
+
 ---
 
 ## Key Takeaways

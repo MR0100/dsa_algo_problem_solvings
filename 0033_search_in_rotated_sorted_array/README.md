@@ -82,6 +82,29 @@ Ignore the rotation; scan for the target.
 - **Time:** O(n).
 - **Space:** O(1).
 
+### Code
+```go
+func bruteForce(nums []int, target int) int {
+    for i, v := range nums {
+        if v == target {
+            return i
+        }
+    }
+    return -1
+}
+```
+
+### Dry Run — `nums = [4,5,6,7,0,1,2]`, `target = 0`
+Linear scan visits each index until `nums[i] == target`.
+
+| i | nums[i] | nums[i] == 0? | action |
+|---|---------|---------------|--------|
+| 0 | 4       | no            | continue |
+| 1 | 5       | no            | continue |
+| 2 | 6       | no            | continue |
+| 3 | 7       | no            | continue |
+| 4 | 0       | **yes**       | return 4 ✓ |
+
 ---
 
 ## Approach 2 — Modified Binary Search (Recommended ✅)

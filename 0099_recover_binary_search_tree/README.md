@@ -130,6 +130,10 @@ Swap 5 and 3 → restored ✓.
 ### Intuition
 Apply the same inversion-detection logic but using Morris inorder traversal (no stack, O(1) space). The same `first`/`second` tracking applies; only the traversal mechanism changes.
 
+### Complexity
+- **Time:** O(n) — each edge is traversed at most twice (once to thread, once to unthread).
+- **Space:** O(1) — no stack or recursion; only a constant number of pointers, threading right links in place.
+
 ### Code
 ```go
 func recoverTreeMorris(root *TreeNode) {
@@ -160,6 +164,21 @@ func recoverTreeMorris(root *TreeNode) {
     first.Val, second.Val = second.Val, first.Val
 }
 ```
+
+### Dry Run (root=[3,1,4,null,null,2])
+
+Tree: root 3, left 1, right 4 (4.left=2). Morris visits nodes in the same inorder order 1, 3, 2, 4; the "visit" happens either when `curr.Left == nil` or when an existing thread is found and removed.
+
+| curr | Left? | Thread action | Visit? | `prev` | Inversion `prev.Val > curr.Val`? | first / second |
+|------|-------|---------------|--------|--------|----------------------------------|----------------|
+| 3 | yes | pred=1 (1.Right nil) → thread 1.Right=3; go left | no | nil | — | nil / nil |
+| 1 | no | — | visit 1 | nil → 1 | — | nil / nil |
+| 3 | yes | pred=1 (1.Right==3) → unthread; go right | visit 3 | 1 → 3 | 1 > 3? no | nil / nil |
+| 4 | yes | pred=2 (2.Right nil) → thread 2.Right=4; go left | no | 3 | — | nil / nil |
+| 2 | no | — | visit 2 | 3, then → 2 | **3 > 2? yes** | first=prev(3), second=2 |
+| 4 | yes | pred=2 (2.Right==4) → unthread; go right | visit 4 | 2 → 4 | 2 > 4? no | first=3 / second=2 |
+
+One inversion (adjacent swap). Final: swap `first.Val`(3) and `second.Val`(2) → inorder becomes 1, 2, 3, 4 ✓.
 
 ---
 

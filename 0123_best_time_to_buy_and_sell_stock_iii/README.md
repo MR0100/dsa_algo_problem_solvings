@@ -135,7 +135,54 @@ For each split point `i`, the two transactions can be split: first in `[0..i]`, 
 - **Space:** O(n)
 
 ### Code
-See `main.go` — `maxProfitLeftRight`.
+```go
+// maxProfitLeftRight solves Best Time to Buy and Sell Stock III by precomputing:
+//   leftMax[i]  = max profit from a single transaction in prices[0..i]
+//   rightMax[i] = max profit from a single transaction in prices[i..n-1]
+// Then answer = max over all splits: leftMax[i] + rightMax[i+1].
+//
+// Time:  O(n)
+// Space: O(n)
+func maxProfitLeftRight(prices []int) int {
+	n := len(prices)
+	if n == 0 {
+		return 0
+	}
+	leftMax := make([]int, n)
+	minLeft := prices[0]
+	for i := 1; i < n; i++ {
+		if prices[i]-minLeft > leftMax[i-1] {
+			leftMax[i] = prices[i] - minLeft
+		} else {
+			leftMax[i] = leftMax[i-1]
+		}
+		if prices[i] < minLeft {
+			minLeft = prices[i]
+		}
+	}
+
+	rightMax := make([]int, n)
+	maxRight := prices[n-1]
+	for i := n - 2; i >= 0; i-- {
+		if maxRight-prices[i] > rightMax[i+1] {
+			rightMax[i] = maxRight - prices[i]
+		} else {
+			rightMax[i] = rightMax[i+1]
+		}
+		if prices[i] > maxRight {
+			maxRight = prices[i]
+		}
+	}
+
+	ans := leftMax[n-1] // only first transaction
+	for i := 0; i < n-1; i++ {
+		if leftMax[i]+rightMax[i+1] > ans {
+			ans = leftMax[i] + rightMax[i+1]
+		}
+	}
+	return ans
+}
+```
 
 ### Dry Run
 `[3,3,5,0,0,3,1,4]`:

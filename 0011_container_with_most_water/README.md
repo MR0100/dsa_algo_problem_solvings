@@ -84,6 +84,47 @@ Try every pair `(i, j)` and compute `min(height[i], height[j]) * (j-i)`. Track t
 - **Time:** O(n²).
 - **Space:** O(1).
 
+### Code
+```go
+// bruteForce checks every pair of lines and tracks the maximum area.
+//
+// Time:  O(n²) — all pairs.
+// Space: O(1).
+func bruteForce(height []int) int {
+	n := len(height)
+	maxArea := 0
+	for i := 0; i < n-1; i++ {
+		for j := i + 1; j < n; j++ {
+			// Area = shorter wall × width.
+			h := height[i]
+			if height[j] < h {
+				h = height[j]
+			}
+			area := h * (j - i)
+			if area > maxArea {
+				maxArea = area
+			}
+		}
+	}
+	return maxArea
+}
+```
+
+### Dry Run — `height = [1,8,6,2,5,4,8,3,7]`
+All pairs `(i,j)` are tried; below are the passes for the first two `i` values, which already contain the winning pair. `maxArea` only ever increases.
+
+| i | j | min(h[i],h[j]) | width j-i | area | maxArea after |
+|---|---|----------------|-----------|------|---------------|
+| 0 | 1 | min(1,8)=1 | 1 | 1 | 1 |
+| 0 | 2 | min(1,6)=1 | 2 | 2 | 2 |
+| 0 | 8 | min(1,7)=1 | 8 | 8 | 8 |
+| 1 | 2 | min(8,6)=6 | 1 | 6 | 8 |
+| 1 | 6 | min(8,8)=8 | 5 | 40 | 40 |
+| 1 | 8 | min(8,7)=7 | 7 | **49** | **49** |
+| … | … | (all later pairs ≤ 49) | | | 49 |
+
+After exhausting every pair, no area exceeds 49, so `maxArea = 49` ✓
+
 ---
 
 ## Approach 2 — Two Pointers (Recommended ✅)

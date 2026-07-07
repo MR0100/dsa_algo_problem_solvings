@@ -84,6 +84,39 @@ return n
 - **Time:** O(n²) — each match triggers an O(n) shift.
 - **Space:** O(1).
 
+### Code
+```go
+func bruteForce(nums []int, val int) int {
+    n := len(nums)
+    i := 0
+    for i < n {
+        if nums[i] == val {
+            // shift everything after i left by one
+            for j := i; j < n-1; j++ {
+                nums[j] = nums[j+1]
+            }
+            n-- // one fewer element in the valid portion
+        } else {
+            i++
+        }
+    }
+    return n
+}
+```
+
+### Dry Run — `nums = [3,2,2,3]`, `val = 3`
+`i` scans; on a match, shift the tail left and shrink `n` (don't advance `i`); otherwise advance `i`:
+
+| i | n | nums[i] | == val? | action | nums after | n after |
+|---|---|---------|---------|--------|------------|---------|
+| 0 | 4 | 3 | yes | shift left, n-- | `[2,2,3,3]` | 3 |
+| 0 | 3 | 2 | no | i++ | `[2,2,3,3]` | 3 |
+| 1 | 3 | 2 | no | i++ | `[2,2,3,3]` | 3 |
+| 2 | 3 | 3 | yes | shift left, n-- | `[2,2,3,3]` | 2 |
+| 2 | 2 | — | i == n | stop | — | 2 |
+
+**Result:** `k=2`, `nums[:2]=[2,2]` ✓
+
 ---
 
 ## Approach 2 — Write Pointer (Recommended ✅, order preserved)
@@ -158,6 +191,23 @@ return right
 ### Complexity
 - **Time:** O(n).
 - **Space:** O(1).
+
+### Code
+```go
+func swapFromEnd(nums []int, val int) int {
+    left, right := 0, len(nums)
+    for left < right {
+        if nums[left] == val {
+            // overwrite the match with the last element in the valid region
+            nums[left] = nums[right-1]
+            right-- // shrink valid region from the right
+        } else {
+            left++
+        }
+    }
+    return right
+}
+```
 
 ### Dry Run — `nums = [3,2,2,3]`, `val = 3`
 ```

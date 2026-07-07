@@ -94,6 +94,36 @@ return jumps
 - **Time:** O(n).
 - **Space:** O(1).
 
+### Code
+```go
+// bfs solves Jump Game II by treating each jump level as a BFS level.
+//
+// Time:  O(n)
+// Space: O(1)
+func bfs(nums []int) int {
+    n := len(nums)
+    if n <= 1 {
+        return 0
+    }
+    jumps := 0
+    curEnd := 0   // rightmost index reachable with current jump count
+    farthest := 0 // rightmost index reachable with one more jump
+    for i := 0; i < n-1; i++ {
+        if i+nums[i] > farthest {
+            farthest = i + nums[i] // update farthest reachable from i
+        }
+        if i == curEnd { // we've exhausted the current jump level
+            jumps++
+            curEnd = farthest
+            if curEnd >= n-1 {
+                break // already reached the end
+            }
+        }
+    }
+    return jumps
+}
+```
+
 ### Dry Run — `nums = [2,3,1,1,4]`
 ```
 jumps=0, curEnd=0, farthest=0
@@ -118,6 +148,43 @@ This is the same algorithm as Approach 1, framed as greedy.
 - **Time:** O(n).
 - **Space:** O(1).
 
+### Code
+```go
+// greedy solves Jump Game II identically to the BFS but framed as a greedy:
+// at each position, track the farthest reachable index. Use a jump whenever we
+// must advance to the next "frontier".
+//
+// Time:  O(n)
+// Space: O(1)
+func greedy(nums []int) int {
+    jumps, curEnd, farthest := 0, 0, 0
+    for i := 0; i < len(nums)-1; i++ {
+        if i+nums[i] > farthest {
+            farthest = i + nums[i]
+        }
+        if i == curEnd {
+            jumps++
+            curEnd = farthest
+        }
+    }
+    return jumps
+}
+```
+
+### Dry Run — `nums = [2,3,1,1,4]`
+
+Same mechanics as Approach 1 (no early break in this variant): update `farthest`, and whenever `i == curEnd` spend a jump and extend the frontier. Loop runs `i = 0 … n-2`.
+
+| `i` | `nums[i]` | `farthest = max(farthest, i+nums[i])` | `i == curEnd`? | `jumps` | `curEnd` |
+|-----|-----------|----------------------------------------|----------------|---------|----------|
+| start | — | 0 | — | 0 | 0 |
+| 0 | 2 | max(0, 2) = 2 | yes (0==0) | 1 | 2 |
+| 1 | 3 | max(2, 4) = 4 | no (1<2) | 1 | 2 |
+| 2 | 1 | max(4, 3) = 4 | yes (2==2) | 2 | 4 |
+| 3 | 1 | max(4, 4) = 4 | no (3<4) | 2 | 4 |
+
+Loop ends at `i = 3` (`n-1 = 4`). Return `jumps = 2` ✓.
+
 ---
 
 ## Approach 3 — Dynamic Programming
@@ -128,6 +195,47 @@ This is the same algorithm as Approach 1, framed as greedy.
 ### Complexity
 - **Time:** O(n²).
 - **Space:** O(n).
+
+### Code
+```go
+// dpApproach solves Jump Game II with backward DP.
+//
+// dp[i] = minimum jumps needed to reach index i.
+// For each i, look back at all j < i where j + nums[j] >= i:
+//   dp[i] = min(dp[j] + 1).
+//
+// Time:  O(n²)
+// Space: O(n)
+func dpApproach(nums []int) int {
+    n := len(nums)
+    dp := make([]int, n)
+    for i := range dp {
+        dp[i] = 1<<31 - 1 // infinity
+    }
+    dp[0] = 0
+    for i := 1; i < n; i++ {
+        for j := 0; j < i; j++ {
+            if j+nums[j] >= i && dp[j]+1 < dp[i] {
+                dp[i] = dp[j] + 1
+            }
+        }
+    }
+    return dp[n-1]
+}
+```
+
+### Dry Run — `nums = [2,3,1,1,4]`
+
+`dp[i]` = min jumps to reach `i`. Init `dp = [0, ∞, ∞, ∞, ∞]`. For each `i`, scan `j < i`; if `j + nums[j] >= i`, relax `dp[i] = min(dp[i], dp[j]+1)`.
+
+| `i` | reachable `j` (where `j+nums[j] >= i`) | `dp[j]+1` candidates | `dp[i]` |
+|-----|-----------------------------------------|----------------------|---------|
+| 1 | j=0 (0+2≥1) | dp[0]+1 = 1 | 1 |
+| 2 | j=0 (0+2≥2), j=1 (1+3≥2) | 0+1=1, 1+1=2 | 1 |
+| 3 | j=1 (1+3≥3), j=2 (2+1≥3) | dp[1]+1=2, dp[2]+1=2 | 2 |
+| 4 | j=1 (1+3≥4), j=3 (3+1≥4) | dp[1]+1=2, dp[3]+1=3 | 2 |
+
+`dp = [0, 1, 1, 2, 2]`. Return `dp[n-1] = dp[4] = 2` ✓.
 
 ---
 

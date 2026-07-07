@@ -144,6 +144,70 @@ Same algorithm; replace maps with pre-allocated boolean slices for O(1) array ac
 - **Time:** O(n!).
 - **Space:** O(n).
 
+### Code
+```go
+func backtrackingArrays(n int) [][]string {
+    var result [][]string
+    cols := make([]bool, n)
+    diag := make([]bool, 2*n) // index: (r-c) + (n-1) to keep non-negative
+    anti := make([]bool, 2*n) // index: r+c
+    board := make([][]byte, n)
+    for i := range board {
+        board[i] = make([]byte, n)
+        for j := range board[i] {
+            board[i][j] = '.'
+        }
+    }
+
+    var bt func(row int)
+    bt = func(row int) {
+        if row == n {
+            snap := make([]string, n)
+            for i, r := range board {
+                snap[i] = string(r)
+            }
+            result = append(result, snap)
+            return
+        }
+        for c := 0; c < n; c++ {
+            dIdx := (row - c) + (n - 1) // shift to keep non-negative
+            aIdx := row + c
+            if cols[c] || diag[dIdx] || anti[aIdx] {
+                continue
+            }
+            board[row][c] = 'Q'
+            cols[c] = true
+            diag[dIdx] = true
+            anti[aIdx] = true
+
+            bt(row + 1)
+
+            board[row][c] = '.'
+            cols[c] = false
+            diag[dIdx] = false
+            anti[aIdx] = false
+        }
+    }
+
+    bt(0)
+    return result
+}
+```
+
+### Dry Run — `n = 4`
+
+Diagonal index `dIdx = (row - c) + (n-1) = (row - c) + 3`; anti index `aIdx = row + c`. Same recursion as Approach 1, but conflicts are checked against `[]bool` slices.
+
+| Step | Action | Placed | `cols` true | `diag` idx true | `anti` idx true |
+|------|--------|--------|-------------|-----------------|-----------------|
+| bt(0), c=1 | place Q at (0,1) | (0,1) | {1} | {(0-1)+3=2} | {0+1=1} |
+| bt(1), c=0,2 blocked; c=3 | place Q at (1,3) | (1,3) | {1,3} | {2, (1-3)+3=1} | {1, 1+3=4} |
+| bt(2), c=0 | place Q at (2,0) | (2,0) | {1,3,0} | {2,1, (2-0)+3=5} | {1,4, 2+0=2} |
+| bt(3), c=2 | place Q at (3,2) | (3,2) | {1,3,0,2} | {2,1,5, (3-2)+3=4} | {1,4,2, 3+2=5} |
+| bt(4) | row==n → record | — | — | — | — |
+
+First solution recorded: `[".Q..","...Q","Q...","..Q."]`. Backtracking continues and finds the second: `["..Q.","Q...","...Q",".Q.."]`. Total 2 ✓
+
 ---
 
 ## Key Takeaways

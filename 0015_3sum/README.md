@@ -85,6 +85,42 @@ Try every combination of three indices (i, j, k). Deduplicate using a sorted tri
 - **Time:** O(n³).
 - **Space:** O(n) — the dedup map.
 
+### Code
+```go
+func bruteForce(nums []int) [][]int {
+    n := len(nums)
+    seen := make(map[[3]int]bool)
+    var result [][]int
+    for i := 0; i < n-2; i++ {
+        for j := i + 1; j < n-1; j++ {
+            for k := j + 1; k < n; k++ {
+                if nums[i]+nums[j]+nums[k] == 0 {
+                    triple := [3]int{nums[i], nums[j], nums[k]}
+                    sort.Ints(triple[:])
+                    if !seen[triple] {
+                        seen[triple] = true
+                        result = append(result, []int{triple[0], triple[1], triple[2]})
+                    }
+                }
+            }
+        }
+    }
+    return result
+}
+```
+
+### Dry Run — `nums = [-1,0,1,2,-1,-4]`
+
+Indices `nums = [(-1)@0, 0@1, 1@2, 2@3, (-1)@4, (-4)@5]` (no sort). Only zero-sum triples shown; the rest fall through.
+
+| i | j | k | nums[i]+nums[j]+nums[k] | sorted triple | new? | seen keys | result |
+|---|---|---|------------------------|---------------|------|-----------|--------|
+| 0 (-1) | 1 (0) | 2 (1)  | -1+0+1 = 0  | [-1,0,1]  | yes | {[-1,0,1]}          | [[-1,0,1]] |
+| 0 (-1) | 3 (2) | 4 (-1) | -1+2-1 = 0  | [-1,-1,2] | yes | {[-1,0,1],[-1,-1,2]} | [[-1,0,1],[-1,-1,2]] |
+| 1 (0)  | 2 (1) | 4 (-1) | 0+1-1 = 0   | [-1,0,1]  | no (seen) | unchanged      | unchanged |
+
+Final result: `[[-1,0,1],[-1,-1,2]]` (order differs from Approach 2 but same set). ✓
+
 ---
 
 ## Approach 2 — Sort + Two Pointers (Recommended ✅)
@@ -177,6 +213,49 @@ Fix index `i`. For each `j > i`, the required third element is `complement = -nu
 ### Complexity
 - **Time:** O(n²).
 - **Space:** O(n) per outer iteration.
+
+### Code
+```go
+func hashSet(nums []int) [][]int {
+    n := len(nums)
+    seen := make(map[[3]int]bool)
+    var result [][]int
+    for i := 0; i < n-2; i++ {
+        inner := make(map[int]bool)
+        for j := i + 1; j < n; j++ {
+            complement := -nums[i] - nums[j]
+            if inner[complement] {
+                triple := [3]int{nums[i], nums[j], complement}
+                sort.Ints(triple[:])
+                if !seen[triple] {
+                    seen[triple] = true
+                    result = append(result, []int{triple[0], triple[1], triple[2]})
+                }
+            }
+            inner[nums[j]] = true
+        }
+    }
+    return result
+}
+```
+
+### Dry Run — `nums = [-1,0,1,2,-1,-4]` (no sort)
+
+For each `i`, `inner` accumulates values `nums[i+1..j-1]`; a hit means `complement = -nums[i]-nums[j]` was already seen.
+
+| i | nums[i] | j | nums[j] | complement | inner (before j) | hit? | action |
+|---|---------|---|---------|-----------|------------------|------|--------|
+| 0 | -1 | 1 | 0  | 1  | {}            | no  | add 0 |
+| 0 | -1 | 2 | 1  | 0  | {0}           | yes | complement 0 seen → triple {-1,1,0} → sorted [-1,0,1] → record |
+| 0 | -1 | 3 | 2  | -1 | {0,1}         | no  | add 2 |
+| 0 | -1 | 4 | -1 | 2  | {0,1,2}       | yes | complement 2 seen → triple {-1,-1,2} → sorted [-1,-1,2] → record |
+| 0 | -1 | 5 | -4 | 5  | {0,1,2,-1}    | no  | add -4 |
+| 1 | 0  | 2 | 1  | -1 | {}            | no  | add 1 |
+| 1 | 0  | 3 | 2  | -2 | {1}           | no  | add 2 |
+| 1 | 0  | 4 | -1 | 1  | {1,2}         | yes | triple {0,-1,1} → sorted [-1,0,1] → already in `seen`, skip |
+| ... | | | | | | | remaining i produce no new distinct triples |
+
+Final result: `[[-1,0,1],[-1,-1,2]]` (same set as the other approaches). ✓
 
 ---
 

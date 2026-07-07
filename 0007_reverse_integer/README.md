@@ -85,6 +85,45 @@ Convert `x` to a string (handling sign separately), reverse the characters, then
 ### Note
 This uses a 64-bit integer internally, which violates the problem constraint ("do not use 64-bit integers"). It is included for comparison only; the math approach is the correct interview answer.
 
+### Code
+```go
+func stringConversion(x int) int {
+    if x == 0 {
+        return 0
+    }
+
+    sign := 1
+    if x < 0 {
+        sign = -1
+        x = -x
+    }
+
+    s := strconv.Itoa(x)
+    // Reverse the string.
+    runes := []byte(s)
+    for l, r := 0, len(runes)-1; l < r; l, r = l+1, r-1 {
+        runes[l], runes[r] = runes[r], runes[l]
+    }
+
+    // Parse back; catch overflow.
+    val, err := strconv.ParseInt(string(runes), 10, 64)
+    if err != nil || val > math.MaxInt32 {
+        return 0
+    }
+    return sign * int(val)
+}
+```
+
+### Dry Run — `x = -123`
+
+| Step | Action | State |
+|------|--------|-------|
+| 1 | `x != 0`, `x < 0` | `sign = -1`, `x = 123` |
+| 2 | `strconv.Itoa(123)` | `s = "123"` |
+| 3 | reverse bytes (`l=0,r=2` → `l=1,r=1` stop) | `runes = "321"` |
+| 4 | `ParseInt("321")`, `321 ≤ MaxInt32` | `val = 321` |
+| 5 | `return sign * val` | **-321** |
+
 ---
 
 ## Approach 2 — Math Pop and Push (Recommended ✅)

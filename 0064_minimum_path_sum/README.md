@@ -78,6 +78,54 @@ Output: 12
 - **Time:** O(m × n).
 - **Space:** O(m × n).
 
+### Code
+```go
+// dpBottomUp solves Minimum Path Sum using a 2D DP table.
+//
+// Time:  O(m × n)
+// Space: O(m × n)
+func dpBottomUp(grid [][]int) int {
+	m, n := len(grid), len(grid[0])
+	dp := make([][]int, m)
+	for i := range dp {
+		dp[i] = make([]int, n)
+	}
+	dp[0][0] = grid[0][0]
+	for r := 1; r < m; r++ {
+		dp[r][0] = dp[r-1][0] + grid[r][0]
+	}
+	for c := 1; c < n; c++ {
+		dp[0][c] = dp[0][c-1] + grid[0][c]
+	}
+	for r := 1; r < m; r++ {
+		for c := 1; c < n; c++ {
+			if dp[r-1][c] < dp[r][c-1] {
+				dp[r][c] = dp[r-1][c] + grid[r][c]
+			} else {
+				dp[r][c] = dp[r][c-1] + grid[r][c]
+			}
+		}
+	}
+	return dp[m-1][n-1]
+}
+```
+
+### Dry Run — `grid = [[1,3,1],[1,5,1],[4,2,1]]`
+
+| step | cell | computation | dp |
+|------|------|-------------|----|
+| init | dp[0][0] | grid[0][0] | 1 |
+| first col | dp[1][0] | dp[0][0]+grid[1][0]=1+1 | 2 |
+| first col | dp[2][0] | dp[1][0]+grid[2][0]=2+4 | 6 |
+| first row | dp[0][1] | dp[0][0]+grid[0][1]=1+3 | 4 |
+| first row | dp[0][2] | dp[0][1]+grid[0][2]=4+1 | 5 |
+| interior | dp[1][1] | min(dp[0][1],dp[1][0])+5=min(4,2)+5 | 7 |
+| interior | dp[1][2] | min(dp[0][2],dp[1][1])+1=min(5,7)+1 | 6 |
+| interior | dp[2][1] | min(dp[1][1],dp[2][0])+2=min(7,6)+2 | 8 |
+| interior | dp[2][2] | min(dp[1][2],dp[2][1])+1=min(6,8)+1 | 7 |
+
+Return `dp[2][2] = 7` ✓ (path: 1→3→1→1→1)
+
 ---
 
 ## Approach 2 — DP In-Place (Recommended ✅)
@@ -90,6 +138,35 @@ No extra allocation needed. If modifying input is acceptable (it usually is in i
 ### Complexity
 - **Time:** O(m × n).
 - **Space:** O(1).
+
+### Code
+```go
+// dpInPlace solves Minimum Path Sum by reusing the input grid as the DP table.
+//
+// Time:  O(m × n)
+// Space: O(1)  — no extra allocation (grid reused).
+func dpInPlace(grid [][]int) int {
+	m, n := len(grid), len(grid[0])
+	// first row accumulates left-to-right
+	for c := 1; c < n; c++ {
+		grid[0][c] += grid[0][c-1]
+	}
+	// first col accumulates top-to-bottom
+	for r := 1; r < m; r++ {
+		grid[r][0] += grid[r-1][0]
+	}
+	for r := 1; r < m; r++ {
+		for c := 1; c < n; c++ {
+			if grid[r-1][c] < grid[r][c-1] {
+				grid[r][c] += grid[r-1][c]
+			} else {
+				grid[r][c] += grid[r][c-1]
+			}
+		}
+	}
+	return grid[m-1][n-1]
+}
+```
 
 ### Dry Run — `grid = [[1,3,1],[1,5,1],[4,2,1]]`
 ```
@@ -117,6 +194,49 @@ Before updating `dp[c]`: it holds the min-cost to reach the cell above (row r-1,
 ### Complexity
 - **Time:** O(m × n).
 - **Space:** O(n).
+
+### Code
+```go
+// dpRolling solves Minimum Path Sum with O(n) space.
+//
+// Time:  O(m × n)
+// Space: O(n)
+func dpRolling(grid [][]int) int {
+	m, n := len(grid), len(grid[0])
+	dp := make([]int, n)
+	dp[0] = grid[0][0]
+	for c := 1; c < n; c++ {
+		dp[c] = dp[c-1] + grid[0][c] // first row init
+	}
+	for r := 1; r < m; r++ {
+		dp[0] += grid[r][0] // first col: only can come from above
+		for c := 1; c < n; c++ {
+			top := dp[c] // before update = dp[r-1][c]
+			left := dp[c-1] // after update = dp[r][c-1]
+			if top < left {
+				dp[c] = top + grid[r][c]
+			} else {
+				dp[c] = left + grid[r][c]
+			}
+		}
+	}
+	return dp[n-1]
+}
+```
+
+### Dry Run — `grid = [[1,3,1],[1,5,1],[4,2,1]]`
+
+| step | action | dp after |
+|------|--------|----------|
+| init row 0 | dp[0]=1; dp[1]=dp[0]+3=4; dp[2]=dp[1]+1=5 | [1,4,5] |
+| r=1, first col | dp[0]+=grid[1][0]=1+1 | [2,4,5] |
+| r=1, c=1 | dp[1]=min(top=4,left=2)+5=2+5 | [2,7,5] |
+| r=1, c=2 | dp[2]=min(top=5,left=7)+1=5+1 | [2,7,6] |
+| r=2, first col | dp[0]+=grid[2][0]=2+4 | [6,7,6] |
+| r=2, c=1 | dp[1]=min(top=7,left=6)+2=6+2 | [6,8,6] |
+| r=2, c=2 | dp[2]=min(top=6,left=8)+1=6+1 | [6,8,7] |
+
+Return `dp[n-1] = dp[2] = 7` ✓
 
 ---
 

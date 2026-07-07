@@ -79,6 +79,37 @@ Walk the array; record the first and last indices where `nums[i] == target`.
 - **Time:** O(n).
 - **Space:** O(1).
 
+### Code
+```go
+func linearScan(nums []int, target int) []int {
+	first, last := -1, -1
+	for i, v := range nums {
+		if v == target {
+			if first == -1 {
+				first = i
+			}
+			last = i
+		}
+	}
+	return []int{first, last}
+}
+```
+
+### Dry Run — `nums = [5,7,7,8,8,10]`, `target = 8`
+Single pass; set `first` on the first match, keep updating `last` on every match.
+
+| i | nums[i] | == 8? | first | last |
+|---|---------|-------|-------|------|
+| start | — | — | -1 | -1 |
+| 0 | 5  | no  | -1 | -1 |
+| 1 | 7  | no  | -1 | -1 |
+| 2 | 7  | no  | -1 | -1 |
+| 3 | 8  | yes | **3** | **3** |
+| 4 | 8  | yes | 3 | **4** |
+| 5 | 10 | no  | 3 | 4 |
+
+Result: `[3, 4]` ✓
+
 ---
 
 ## Approach 2 — Two Binary Searches (Recommended ✅)

@@ -76,6 +76,61 @@ Output: false
 - **Time:** O(log m + log n) = O(log(m × n)).
 - **Space:** O(1).
 
+### Code
+```go
+func twoStepBinarySearch(matrix [][]int, target int) bool {
+	m, n := len(matrix), len(matrix[0])
+
+	// find the row: last row where matrix[row][0] <= target
+	lo, hi := 0, m-1
+	row := -1
+	for lo <= hi {
+		mid := lo + (hi-lo)/2
+		if matrix[mid][0] <= target {
+			row = mid
+			lo = mid + 1
+		} else {
+			hi = mid - 1
+		}
+	}
+	if row == -1 {
+		return false // target is less than the smallest element
+	}
+
+	// binary search within the found row
+	lo, hi = 0, n-1
+	for lo <= hi {
+		mid := lo + (hi-lo)/2
+		if matrix[row][mid] == target {
+			return true
+		} else if matrix[row][mid] < target {
+			lo = mid + 1
+		} else {
+			hi = mid - 1
+		}
+	}
+	return false
+}
+```
+
+### Dry Run — `matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]]`, `target = 3`
+
+**Step 1 — find the row** (last row where `matrix[row][0] ≤ 3`), `lo=0, hi=2, row=-1`:
+
+| lo | hi | mid | matrix[mid][0] | ≤ 3? | action | row |
+|----|----|-----|----------------|------|--------|-----|
+| 0  | 2  | 1   | 10             | no   | hi=0   | -1  |
+| 0  | 0  | 0   | 1              | yes  | row=0, lo=1 | 0 |
+| 1  | 0  | —   | —              | —    | loop ends (lo>hi) | 0 |
+
+Row found: `row=0`.
+
+**Step 2 — binary search within row 0** `[1,3,5,7]`, `lo=0, hi=3`:
+
+| lo | hi | mid | matrix[0][mid] | vs 3 | action |
+|----|----|-----|----------------|------|--------|
+| 0  | 3  | 1   | 3              | ==   | return true ✓ |
+
 ---
 
 ## Approach 2 — Flat Binary Search (Recommended ✅)

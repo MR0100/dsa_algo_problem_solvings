@@ -77,6 +77,46 @@ Sort the array; walk and track the expected next integer starting at 1. Simple b
 - **Time:** O(n log n).
 - **Space:** O(1) (in-place sort).
 
+### Code
+```go
+// sortingApproach solves First Missing Positive by sorting the array and then
+// scanning for the first missing positive integer.
+//
+// Time:  O(n log n) — dominated by the sort
+// Space: O(1) — in-place sort (or O(log n) for the sort stack)
+func sortingApproach(nums []int) int {
+    sortInts(nums)
+    expected := 1
+    for _, v := range nums {
+        if v == expected {
+            expected++
+        }
+    }
+    return expected
+}
+
+func sortInts(a []int) {
+    for i := 1; i < len(a); i++ {
+        for j := i; j > 0 && a[j] < a[j-1]; j-- {
+            a[j], a[j-1] = a[j-1], a[j]
+        }
+    }
+}
+```
+
+### Dry Run — `nums = [3,4,-1,1]`
+
+Sort → `[-1,1,3,4]`, then walk tracking `expected` (first unseen positive), starting at 1.
+
+| `v` (sorted) | `expected` before | `v == expected`? | `expected` after |
+|--------------|-------------------|------------------|------------------|
+| -1 | 1 | no | 1 |
+| 1  | 1 | yes → increment | 2 |
+| 3  | 2 | no | 2 |
+| 4  | 2 | no | 2 |
+
+Loop ends. Return `expected = 2` ✓ (1 was found and consumed; 2 was never matched).
+
 ---
 
 ## Approach 2 — Hash Set
@@ -87,6 +127,38 @@ Put all values in a set; scan 1, 2, 3, … and return the first not in the set.
 ### Complexity
 - **Time:** O(n).
 - **Space:** O(n).
+
+### Code
+```go
+// hashSet solves First Missing Positive using a set for O(n) average lookup.
+//
+// Time:  O(n)
+// Space: O(n) — the set
+func hashSet(nums []int) int {
+    s := make(map[int]bool, len(nums))
+    for _, v := range nums {
+        s[v] = true
+    }
+    for i := 1; ; i++ {
+        if !s[i] {
+            return i
+        }
+    }
+}
+```
+
+### Dry Run — `nums = [3,4,-1,1]`
+
+Build the set `s`, then probe `1, 2, 3, …` returning the first value not in `s`.
+
+Set after inserting all values: `s = {3, 4, -1, 1}`.
+
+| Probe `i` | `i` in `s`? | Action |
+|-----------|-------------|--------|
+| 1 | yes | continue |
+| 2 | no  | return 2 ✓ |
+
+Return `2` ✓.
 
 ---
 

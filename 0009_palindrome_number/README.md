@@ -83,6 +83,34 @@ The simplest definition: a palindrome reads the same forwards and backwards. Con
 - **Time:** O(log x) — O(d) where d = number of digits.
 - **Space:** O(log x) — the string.
 
+### Code
+```go
+func stringConversion(x int) bool {
+    if x < 0 {
+        return false // negative numbers are never palindromes
+    }
+    s := strconv.Itoa(x)
+    for l, r := 0, len(s)-1; l < r; l, r = l+1, r-1 {
+        if s[l] != s[r] {
+            return false
+        }
+    }
+    return true
+}
+```
+
+### Dry Run — `x = 12321`
+
+`x ≥ 0`, so proceed. `s = "12321"`, compare from both ends:
+
+| `l` | `r` | `s[l]` | `s[r]` | Match? |
+|-----|-----|--------|--------|--------|
+| 0 | 4 | `1` | `1` | yes |
+| 1 | 3 | `2` | `2` | yes |
+| 2 | 2 | — | — | loop ends (`l < r` false) |
+
+No mismatch found → **true**.
+
 ---
 
 ## Approach 2 — Reverse Full Number
@@ -99,6 +127,36 @@ Reverse all digits of `x` using integer arithmetic and compare against the origi
 ### Complexity
 - **Time:** O(log x).
 - **Space:** O(1).
+
+### Code
+```go
+func reverseFullNumber(x int) bool {
+    if x < 0 || (x%10 == 0 && x != 0) {
+        return false
+    }
+    original := x
+    reversed := 0
+    for x > 0 {
+        reversed = reversed*10 + x%10
+        x /= 10
+    }
+    return original == reversed
+}
+```
+
+### Dry Run — `x = 12321`
+
+`x ≥ 0` and `x % 10 = 1 ≠ 0`, so proceed. `original = 12321`, `reversed = 0`:
+
+| `x` (before) | `x % 10` | `reversed = reversed*10 + x%10` | `x /= 10` |
+|--------------|----------|----------------------------------|-----------|
+| 12321 | 1 | 1 | 1232 |
+| 1232 | 2 | 12 | 123 |
+| 123 | 3 | 123 | 12 |
+| 12 | 2 | 1232 | 1 |
+| 1 | 1 | 12321 | 0 |
+
+Loop ends (`x = 0`). `original (12321) == reversed (12321)` → **true**.
 
 ---
 

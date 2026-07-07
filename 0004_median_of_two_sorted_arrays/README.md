@@ -133,6 +133,38 @@ The crudest approach: ignore the sorted property of both inputs, concatenate the
 ### Why included
 This is strictly worse than Approach 1 — it wastes the sorted property. Included to show the progression from "completely naive" to "uses sorted property" to "optimal".
 
+### Code
+```go
+func concatAndSort(nums1 []int, nums2 []int) float64 {
+    combined := make([]int, len(nums1)+len(nums2))
+    copy(combined, nums1)
+    copy(combined[len(nums1):], nums2)
+    sort.Ints(combined)
+
+    total := len(combined)
+    mid := total / 2
+    if total%2 == 1 {
+        return float64(combined[mid])
+    }
+    return float64(combined[mid-1]+combined[mid]) / 2.0
+}
+```
+
+### Dry Run — Example 2: `nums1=[1,2]`, `nums2=[3,4]`
+```
+combined = nums1 + nums2 = [1,2,3,4]   (copy, no ordering assumed)
+sort.Ints(combined)      = [1,2,3,4]   (already sorted here, but sort runs regardless)
+total=4 (even), mid=2
+return (combined[1]+combined[2])/2 = (2+3)/2 = 2.5 ✓
+```
+
+| step | combined      | note                          |
+|------|---------------|-------------------------------|
+| copy | `[1,2,3,4]`   | nums1 then nums2, unsorted view|
+| sort | `[1,2,3,4]`   | O((m+n)log(m+n)) sort pass     |
+| read | mid=2         | even → avg of index 1 and 2    |
+| ret  | `2.5`         | (2+3)/2                        |
+
 ---
 
 ## Approach 3 — Two-Pointer Walk to Median Position
@@ -149,6 +181,38 @@ The same as Approach 1 but without storing the merged array. We walk two pointer
 ### Complexity
 - **Time:** O(m+n) — walk up to `total/2 + 1` steps.
 - **Space:** O(1) — no merged array; only two stored values.
+
+### Code
+```go
+func twoPointerWalk(nums1 []int, nums2 []int) float64 {
+    m, n := len(nums1), len(nums2)
+    total := m + n
+    // We need positions (total-1)/2 and total/2 (they're the same for odd total).
+    targetHigh := total / 2
+    targetLow := targetHigh - 1 + (total % 2) // (total-1)/2, kept for clarity
+
+    i, j := 0, 0
+    prev, cur := 0, 0 // values at positions targetLow and targetHigh
+
+    _ = targetLow // used conceptually; targetHigh drives the loop
+    for step := 0; step <= targetHigh; step++ {
+        prev = cur // shift: prev becomes what was at step-1
+        // Pick the smaller of the two current front elements.
+        if i < m && (j >= n || nums1[i] <= nums2[j]) {
+            cur = nums1[i]
+            i++
+        } else {
+            cur = nums2[j]
+            j++
+        }
+    }
+
+    if total%2 == 1 {
+        return float64(cur) // odd total: single middle element
+    }
+    return float64(prev+cur) / 2.0 // even total: average of two middles
+}
+```
 
 ### Dry Run — Example 1: `nums1=[1,3]`, `nums2=[2]`
 ```

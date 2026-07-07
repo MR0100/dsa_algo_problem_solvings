@@ -81,6 +81,26 @@ return -1
 - **Time:** O(n·m) — worst case: "aaaa...ab" / "aab" causes m comparisons at each of n-m positions.
 - **Space:** O(1).
 
+### Code
+```go
+func bruteForce(haystack, needle string) int {
+    n, m := len(haystack), len(needle)
+    if m == 0 {
+        return 0
+    }
+    for i := 0; i <= n-m; i++ {
+        j := 0
+        for j < m && haystack[i+j] == needle[j] { // compare character by character
+            j++
+        }
+        if j == m { // all m characters matched
+            return i
+        }
+    }
+    return -1
+}
+```
+
 ### Dry Run — `haystack="sadbutsad"`, `needle="sad"`
 ```
 i=0: s==s, a==a, d==d → j=3=m → return 0 ✓
@@ -96,6 +116,23 @@ Go's `strings.Index` implements an optimised string search. Useful when showing 
 ### Complexity
 - **Time:** O(n) average.
 - **Space:** O(1).
+
+### Code
+```go
+func useStdlib(haystack, needle string) int {
+    return strings.Index(haystack, needle)
+}
+```
+
+### Dry Run — `haystack="sadbutsad"`, `needle="sad"`
+`strings.Index` scans internally; here we trace the equivalent search it performs.
+
+| step | window in haystack | compare vs `sad` | result |
+|------|--------------------|------------------|--------|
+| start 0 | `sad`butsad | `sad`==`sad` | full match |
+| return | — | — | index `0` |
+
+`strings.Index("sadbutsad", "sad")` returns `0` on the first matching window. ✓
 
 ---
 

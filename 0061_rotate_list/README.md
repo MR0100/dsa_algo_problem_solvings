@@ -68,6 +68,51 @@ Collect all values into a slice, rotate the slice by `k % n` positions (using sl
 - **Time:** O(n).
 - **Space:** O(n) — extra slice.
 
+### Code
+```go
+// arrayCopy solves Rotate List by collecting all values, rotating the slice,
+// and rebuilding the list.
+//
+// Time:  O(n)
+// Space: O(n) — extra slice.
+func arrayCopy(head *ListNode, k int) *ListNode {
+	if head == nil || head.Next == nil || k == 0 {
+		return head
+	}
+	// collect values
+	var vals []int
+	for cur := head; cur != nil; cur = cur.Next {
+		vals = append(vals, cur.Val)
+	}
+	n := len(vals)
+	k = k % n
+	if k == 0 {
+		return head
+	}
+	// rotate: last k elements move to front
+	rotated := append(vals[n-k:], vals[:n-k]...)
+	// write back
+	cur := head
+	for _, v := range rotated {
+		cur.Val = v
+		cur = cur.Next
+	}
+	return head
+}
+```
+
+### Dry Run — `head = [1,2,3,4,5]`, `k = 2`
+
+| step | state |
+|------|-------|
+| collect values | `vals = [1,2,3,4,5]`, `n = 5` |
+| effective rotation | `k = 2 % 5 = 2` (≠ 0, continue) |
+| split point | `n-k = 3` → last `k` = `vals[3:] = [4,5]`, front = `vals[:3] = [1,2,3]` |
+| rotate | `rotated = [4,5] + [1,2,3] = [4,5,1,2,3]` |
+| write back into nodes | node1←4, node2←5, node3←1, node4←2, node5←3 |
+
+Result list: `4→5→1→2→3` ✓
+
 ---
 
 ## Approach 2 — Find Tail and Reconnect (Recommended ✅)

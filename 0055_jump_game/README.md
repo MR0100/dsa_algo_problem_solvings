@@ -76,6 +76,48 @@ Cache results to avoid repeated recursion on the same index.
 - **Time:** O(n²) — n indices, each potentially scanning up to n successors.
 - **Space:** O(n) — memo array + call stack.
 
+### Code
+```go
+func memoization(nums []int) bool {
+    n := len(nums)
+    memo := make([]int, n) // 0=unknown, 1=good, 2=bad
+    memo[n-1] = 1          // last index is always good
+
+    var canJump func(i int) bool
+    canJump = func(i int) bool {
+        if memo[i] != 0 {
+            return memo[i] == 1
+        }
+        maxReach := i + nums[i]
+        if maxReach >= n-1 {
+            memo[i] = 1
+            return true
+        }
+        for j := i + 1; j <= maxReach; j++ {
+            if canJump(j) {
+                memo[i] = 1
+                return true
+            }
+        }
+        memo[i] = 2
+        return false
+    }
+
+    return canJump(0)
+}
+```
+
+### Dry Run — `nums = [2,3,1,1,4]` (n=5, `memo` init: index 4 = good)
+
+`canJump(i)`: if `i+nums[i] >= n-1` mark good; else recurse on `j` in `[i+1, i+nums[i]]`.
+
+| call | i | maxReach = i+nums[i] | check | result | memo update |
+|------|---|----------------------|-------|--------|-------------|
+| canJump(0) | 0 | 0+2=2 | 2 < 4 → recurse j=1,2 | true (via j=1) | memo[0]=good |
+| ↳ canJump(1) | 1 | 1+3=4 | 4 >= 4 → reachable | true | memo[1]=good |
+
+`canJump(1)` returns true immediately (maxReach 4 ≥ last index), so `canJump(0)` short-circuits and returns true. Result: true ✓
+
 ---
 
 ## Approach 2 — DP Bottom-Up
@@ -86,6 +128,45 @@ Same idea as memoization, computed iteratively from right to left. `dp[i]` is tr
 ### Complexity
 - **Time:** O(n²).
 - **Space:** O(n).
+
+### Code
+```go
+func dpBottomUp(nums []int) bool {
+    n := len(nums)
+    dp := make([]bool, n)
+    dp[n-1] = true // last index is reachable from itself
+
+    for i := n - 2; i >= 0; i-- {
+        maxReach := i + nums[i]
+        if maxReach >= n-1 {
+            dp[i] = true // can jump directly to or past the end
+            continue
+        }
+        for j := i + 1; j <= maxReach; j++ {
+            if dp[j] {
+                dp[i] = true
+                break
+            }
+        }
+    }
+
+    return dp[0]
+}
+```
+
+### Dry Run — `nums = [2,3,1,1,4]` (n=5)
+
+`dp[n-1]=true`. Iterate `i` from n-2 down to 0. `dp[i]=true` if `i+nums[i] >= n-1`, or if any `dp[j]` (`j` in `[i+1, i+nums[i]]`) is true.
+
+| i | nums[i] | maxReach = i+nums[i] | condition | dp[i] |
+|---|---------|----------------------|-----------|-------|
+| 4 | 4       | —                    | init      | true  |
+| 3 | 1       | 4                    | 4 >= 4 → reaches end | true |
+| 2 | 1       | 3                    | dp[3]=true | true |
+| 1 | 3       | 4                    | 4 >= 4 → reaches end | true |
+| 0 | 2       | 2                    | dp[1] or dp[2] = true | true |
+
+`dp[0] = true`. Result: true ✓
 
 ---
 

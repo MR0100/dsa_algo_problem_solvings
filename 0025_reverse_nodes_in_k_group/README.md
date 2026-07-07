@@ -149,6 +149,48 @@ Count k nodes. If fewer than k exist, return head unchanged. Otherwise reverse k
 - **Time:** O(n).
 - **Space:** O(n/k) — one stack frame per group.
 
+### Code
+```go
+func recursive(head *ListNode, k int) *ListNode {
+    // Count k nodes.
+    count, cur := 0, head
+    for cur != nil && count < k {
+        cur = cur.Next
+        count++
+    }
+    if count < k {
+        return head // fewer than k nodes — don't reverse
+    }
+
+    // Reverse k nodes starting from head.
+    var prev *ListNode
+    curr := head
+    for i := 0; i < k; i++ {
+        nxt := curr.Next
+        curr.Next = prev
+        prev = curr
+        curr = nxt
+    }
+    // head is now the tail of the reversed group.
+    // curr is the start of the next group.
+    head.Next = recursive(curr, k)
+    return prev // prev is the new head of this reversed group
+}
+```
+
+### Dry Run — `head = [1,2,3,4,5]`, `k = 2`
+Each call counts k nodes, reverses them if k exist, then recurses on the remainder:
+
+| Call | head in | count ≥ k? | reverse first k | recurse on | head.Next = | returns (new head) |
+|------|---------|------------|-----------------|------------|-------------|--------------------|
+| 1 | `1→2→3→4→5` | 2 ≥ 2 ✓ | `2→1`, curr=`3` | `recursive(3, 2)` | `1.Next = (result of call 2)` | `2` |
+| 2 | `3→4→5` | 2 ≥ 2 ✓ | `4→3`, curr=`5` | `recursive(5, 2)` | `3.Next = (result of call 3)` | `4` |
+| 3 | `5` | 1 < 2 ✗ | — (no reverse) | — | — | `5` (head unchanged) |
+
+Unwinding: call 3 returns `5`; call 2 sets `3.Next=5` and returns `4` (so `4→3→5`); call 1 sets `1.Next=4` and returns `2` (so `2→1→4→3→5`).
+
+**Result:** `[2,1,4,3,5]` ✓
+
 ---
 
 ## Key Takeaways

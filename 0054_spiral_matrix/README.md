@@ -134,6 +134,59 @@ Walk one step at a time in the current direction (right, down, left, up). Mark e
 - **Time:** O(m × n).
 - **Space:** O(m × n) — visited array.
 
+### Code
+```go
+func simulation(matrix [][]int) []int {
+    if len(matrix) == 0 {
+        return nil
+    }
+    m, n := len(matrix), len(matrix[0])
+    result := make([]int, 0, m*n)
+    visited := make([][]bool, m)
+    for i := range visited {
+        visited[i] = make([]bool, n)
+    }
+
+    // right, down, left, up
+    dr := []int{0, 1, 0, -1}
+    dc := []int{1, 0, -1, 0}
+    dir := 0
+    r, c := 0, 0
+
+    for i := 0; i < m*n; i++ {
+        result = append(result, matrix[r][c])
+        visited[r][c] = true
+
+        nr, nc := r+dr[dir], c+dc[dir]
+        if nr < 0 || nr >= m || nc < 0 || nc >= n || visited[nr][nc] {
+            dir = (dir + 1) % 4 // turn right
+            nr, nc = r+dr[dir], c+dc[dir]
+        }
+        r, c = nr, nc
+    }
+
+    return result
+}
+```
+
+### Dry Run — `matrix = [[1,2,3],[4,5,6],[7,8,9]]`
+
+Directions cycle `right(0,1) → down(1,0) → left(0,-1) → up(-1,0)`. Start at `(0,0)`, `dir=0`. Each step records `matrix[r][c]`, then tries to step in `dir`; if the next cell is out of bounds or visited, turn right (`dir=(dir+1)%4`) before moving.
+
+| step | (r,c) | recorded | dir | next cell blocked? | move to |
+|------|-------|----------|-----|--------------------|---------|
+| 0 | (0,0) | 1 | right | (0,1) ok | (0,1) |
+| 1 | (0,1) | 2 | right | (0,2) ok | (0,2) |
+| 2 | (0,2) | 3 | right | (0,3) OOB → turn down | (1,2) |
+| 3 | (1,2) | 6 | down | (2,2) ok | (2,2) |
+| 4 | (2,2) | 9 | down | (3,2) OOB → turn left | (2,1) |
+| 5 | (2,1) | 8 | left | (2,0) ok | (2,0) |
+| 6 | (2,0) | 7 | left | (2,-1) OOB → turn up | (1,0) |
+| 7 | (1,0) | 4 | up | (0,0) visited → turn right | (1,1) |
+| 8 | (1,1) | 5 | up→right | loop ends (i reaches m*n-1) | — |
+
+Recorded order: `[1,2,3,6,9,8,7,4,5]` ✓
+
 ---
 
 ## Key Takeaways

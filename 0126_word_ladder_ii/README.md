@@ -85,7 +85,89 @@ Key: we mark entire BFS layers as visited before expanding them, to correctly tr
 - **Space:** O(N · L) — parents map.
 
 ### Code
-See `main.go` — `findLadders`.
+```go
+// findLadders solves Word Ladder II using BFS to find shortest path length
+// and then DFS/backtracking to collect all shortest paths.
+//
+// Time:  O(N * 26 * L + paths) where N=word list size, L=word length.
+// Space: O(N * L) — BFS layers + parent map.
+func findLadders(beginWord string, endWord string, wordList []string) [][]string {
+	wordSet := make(map[string]bool)
+	for _, w := range wordList {
+		wordSet[w] = true
+	}
+	if !wordSet[endWord] {
+		return nil
+	}
+
+	// parents[word] = set of words that can transform into word at this BFS level
+	parents := make(map[string][]string)
+	currentLayer := map[string]bool{beginWord: true}
+	visited := map[string]bool{beginWord: true}
+	found := false
+
+	for len(currentLayer) > 0 && !found {
+		nextLayer := make(map[string]bool)
+		// mark current layer as visited before processing (avoid going back)
+		for w := range currentLayer {
+			visited[w] = true
+		}
+
+		for word := range currentLayer {
+			bs := []byte(word)
+			for i := 0; i < len(bs); i++ {
+				orig := bs[i]
+				for c := byte('a'); c <= byte('z'); c++ {
+					if c == orig {
+						continue
+					}
+					bs[i] = c
+					next := string(bs)
+					if wordSet[next] && !visited[next] {
+						nextLayer[next] = true
+						parents[next] = append(parents[next], word)
+					}
+					bs[i] = orig
+				}
+			}
+		}
+
+		if nextLayer[endWord] {
+			found = true
+		}
+		currentLayer = nextLayer
+	}
+
+	if !found {
+		return nil
+	}
+
+	// DFS backtrack from endWord to beginWord
+	var result [][]string
+	path := []string{endWord}
+
+	var dfs func(word string)
+	dfs = func(word string) {
+		if word == beginWord {
+			cp := make([]string, len(path))
+			copy(cp, path)
+			// path was built end→begin, reverse it
+			for i, j := 0, len(cp)-1; i < j; i, j = i+1, j-1 {
+				cp[i], cp[j] = cp[j], cp[i]
+			}
+			result = append(result, cp)
+			return
+		}
+		for _, parent := range parents[word] {
+			path = append(path, parent)
+			dfs(parent)
+			path = path[:len(path)-1]
+		}
+	}
+	dfs(endWord)
+	return result
+}
+```
 
 ### Dry Run
 `hit → cog`, wordList = [hot,dot,dog,lot,log,cog]:

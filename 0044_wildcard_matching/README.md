@@ -93,6 +93,44 @@ Match character by character. On `*`, branch: match zero chars (advance `p`) or 
 - **Time:** O(2^(n+m)) — exponential branching on `*`.
 - **Space:** O(n+m).
 
+### Code
+```go
+// recursion solves Wildcard Matching with pure recursion.
+//
+// Time:  O(2^(len(s)+len(p))) — exponential due to '*' branching
+// Space: O(len(s)+len(p)) — recursion stack
+func recursion(s, p string) bool {
+    if len(p) == 0 {
+        return len(s) == 0
+    }
+    if p[0] == '*' {
+        return recursion(s, p[1:]) || // '*' matches zero chars
+            (len(s) > 0 && recursion(s[1:], p)) // '*' matches one or more
+    }
+    if len(s) > 0 && (p[0] == '?' || p[0] == s[0]) {
+        return recursion(s[1:], p[1:])
+    }
+    return false
+}
+```
+
+### Dry Run — `s = "aa"`, `p = "*"`
+
+Each call peels one character. On `*`: try matching zero chars (`recursion(s, p[1:])`) OR one-or-more (`recursion(s[1:], p)`).
+
+| Call | Branch taken | Result |
+|------|--------------|--------|
+| `recursion("aa","*")` | p[0]=='*': try `("aa","")` then `("a","*")` | see below → true |
+| `recursion("aa","")` | len(p)==0, len(s)!=0 | false |
+| `recursion("a","*")` | p[0]=='*': try `("a","")` then `("","*")` | see below → true |
+| `recursion("a","")` | len(p)==0, len(s)!=0 | false |
+| `recursion("","*")` | p[0]=='*': try `("","")` | true |
+| `recursion("","")` | len(p)==0 and len(s)==0 | true |
+
+The `("","")` base case returns true, which bubbles up: `("","*")` → true, `("a","*")` → true, `("aa","*")` → true.
+
+Result: `true` ✓ — `*` consumed both characters via successive "match one more" branches.
+
 ---
 
 ## Approach 2 — DP Bottom-Up (Recommended ✅)
@@ -112,6 +150,42 @@ Match character by character. On `*`, branch: match zero chars (advance `p`) or 
 ### Complexity
 - **Time:** O(n × m).
 - **Space:** O(n × m) — reducible to O(n) with a rolling array.
+
+### Code
+```go
+// dpBottomUp solves Wildcard Matching using a 2D DP table.
+//
+// Time:  O(len(s) * len(p))
+// Space: O(len(s) * len(p)) — can be reduced to O(len(s)) with rolling array
+func dpBottomUp(s, p string) bool {
+    m, n := len(s), len(p)
+    dp := make([][]bool, m+1)
+    for i := range dp {
+        dp[i] = make([]bool, n+1)
+    }
+    dp[0][0] = true // empty matches empty
+
+    // empty string can only match all-'*' pattern
+    for j := 1; j <= n; j++ {
+        if p[j-1] == '*' {
+            dp[0][j] = dp[0][j-1]
+        }
+    }
+
+    for i := 1; i <= m; i++ {
+        for j := 1; j <= n; j++ {
+            if p[j-1] == '*' {
+                // '*' matches zero chars from s  → dp[i][j-1]
+                // '*' matches one more char of s → dp[i-1][j]
+                dp[i][j] = dp[i][j-1] || dp[i-1][j]
+            } else if p[j-1] == '?' || p[j-1] == s[i-1] {
+                dp[i][j] = dp[i-1][j-1]
+            }
+        }
+    }
+    return dp[m][n]
+}
+```
 
 ### Dry Run — `s="adceb"`, `p="*a*b"` (abbreviated)
 ```

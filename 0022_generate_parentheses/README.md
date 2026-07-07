@@ -74,6 +74,62 @@ Generate every string of length 2n using `(` and `)`, then filter the valid ones
 - **Time:** O(2^(2n) · n) — 4^n strings, each validated in O(n).
 - **Space:** O(4^n · n).
 
+### Code
+```go
+// bruteForce generates every string of length 2n using '(' and ')', then
+// filters out invalid ones.
+//
+// Time:  O(2^(2n) · n) — generate 2^(2n) strings, each validated in O(n).
+// Space: O(2^(2n) · n) — all generated strings.
+func bruteForce(n int) []string {
+	var result []string
+	generate(make([]byte, 2*n), 0, n, &result)
+	return result
+}
+
+func generate(current []byte, pos, n int, result *[]string) {
+	if pos == 2*n {
+		if isValid(current) {
+			*result = append(*result, string(current))
+		}
+		return
+	}
+	current[pos] = '('
+	generate(current, pos+1, n, result)
+	current[pos] = ')'
+	generate(current, pos+1, n, result)
+}
+
+func isValid(s []byte) bool {
+	balance := 0
+	for _, ch := range s {
+		if ch == '(' {
+			balance++
+		} else {
+			balance--
+		}
+		if balance < 0 {
+			return false
+		}
+	}
+	return balance == 0
+}
+```
+
+### Dry Run — `n = 2`
+`generate` fills 2n = 4 positions, trying `(` then `)` at each, and `isValid` filters the 2^4 = 16 leaves with a balance counter (`balance` never goes < 0, must end at 0). Representative leaves:
+
+| String | balance trace | Valid? |
+|--------|---------------|--------|
+| `(())` | 1, 2, 1, 0 | ✓ record |
+| `()()` | 1, 0, 1, 0 | ✓ record |
+| `(()(` | 1, 2, 1, 2 → ends 2 ≠ 0 | ✗ |
+| `()((` | 1, 0, 1, 2 → ends 2 ≠ 0 | ✗ |
+| `)(()` | −1 on first char | ✗ |
+| `))((` | −1 on first char | ✗ |
+
+Only two of the sixteen candidates pass. **Result:** `["(())", "()()"]` ✓
+
 ---
 
 ## Approach 2 — Backtracking (Recommended ✅)
@@ -148,6 +204,45 @@ Build iteratively: `dp[0] = [""]`, `dp[k] = ["("+inner+")"+outer for i in 0..k-1
 ### Complexity
 - **Time:** O(4^n / √n) — same total number of strings.
 - **Space:** O(4^n / √n) — the full dp table.
+
+### Code
+```go
+// dpApproach builds dp[k] (all valid strings of k pairs) from dp[0..k-1].
+//
+// Time:  O(4^n / sqrt(n)) — same count of valid strings to produce.
+// Space: O(4^n / sqrt(n)) — all generated strings stored in dp table.
+func dpApproach(n int) []string {
+	// dp[k] = all valid parenthesisations of k pairs.
+	dp := make([][]string, n+1)
+	dp[0] = []string{""}
+
+	for k := 1; k <= n; k++ {
+		var combinations []string
+		for i := 0; i < k; i++ {
+			j := k - 1 - i
+			for _, inner := range dp[i] {
+				for _, outer := range dp[j] {
+					combinations = append(combinations, "("+inner+")"+outer)
+				}
+			}
+		}
+		dp[k] = combinations
+	}
+	return dp[n]
+}
+```
+
+### Dry Run — `n = 2`
+Build `dp[0..2]` bottom-up using `dp[k] = "(" + dp[i] + ")" + dp[k-1-i]` for `i` in `0..k-1`:
+
+| k | i (j = k−1−i) | inner (dp[i]) × outer (dp[j]) | strings produced | dp[k] |
+|---|---------------|-------------------------------|------------------|-------|
+| 0 | — | — | — | `[""]` |
+| 1 | i=0, j=0 | `""` × `""` | `"(" + "" + ")" + "" = "()"` | `["()"]` |
+| 2 | i=0, j=1 | `""` × `"()"` | `"()" + "()" → "()()"` | — |
+| 2 | i=1, j=0 | `"()"` × `""` | `"(()" + ")" → "(())"` | — |
+
+Concatenating the k=2 rows gives `dp[2] = ["()()", "(())"]`. **Result:** `["()()", "(())"]` ✓ (same set as the other approaches, different order).
 
 ---
 

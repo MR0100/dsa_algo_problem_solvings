@@ -115,13 +115,80 @@ Wait — `XOXX`: the bottom-left 'O' at row=3,col=1 is on the border → DFS fro
 ## Approach 2 — BFS from Border
 
 ### Intuition
-Same algorithm but uses BFS queue instead of recursion. Avoids potential stack overflow on large boards.
+Same algorithm but uses BFS queue instead of recursion. Avoids potential stack overflow on large boards. Seed the queue with every border 'O' (marking each 'S' as it is enqueued), then pop cells and enqueue their unvisited 'O' neighbours.
+
+### Complexity
+- **Time:** O(m·n) — every cell is enqueued and dequeued at most once.
+- **Space:** O(m·n) — the queue can hold up to O(m·n) cells in the worst case.
 
 ### Code
-See `main.go` — `solveBFS`.
+```go
+// solveBFS solves Surrounded Regions using BFS instead of DFS.
+//
+// Time:  O(m*n)
+// Space: O(m*n) — BFS queue.
+func solveBFS(board [][]byte) {
+	if len(board) == 0 {
+		return
+	}
+	m, n := len(board), len(board[0])
+	type pt struct{ r, c int }
+	dirs := []pt{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
 
-### Dry Run
-Same result as DFS approach.
+	var queue []pt
+	enqueue := func(r, c int) {
+		if r >= 0 && r < m && c >= 0 && c < n && board[r][c] == 'O' {
+			board[r][c] = 'S'
+			queue = append(queue, pt{r, c})
+		}
+	}
+
+	// seed from border
+	for c := 0; c < n; c++ { enqueue(0, c); enqueue(m-1, c) }
+	for r := 0; r < m; r++ { enqueue(r, 0); enqueue(r, n-1) }
+
+	for len(queue) > 0 {
+		curr := queue[0]; queue = queue[1:]
+		for _, d := range dirs {
+			enqueue(curr.r+d.r, curr.c+d.c)
+		}
+	}
+
+	for r := 0; r < m; r++ {
+		for c := 0; c < n; c++ {
+			if board[r][c] == 'O' { board[r][c] = 'X' } else if board[r][c] == 'S' { board[r][c] = 'O' }
+		}
+	}
+}
+```
+
+### Dry Run — Example 1 board (4×4)
+
+```
+row\col  0 1 2 3
+  0      X X X X
+  1      X O O X
+  2      X X O X
+  3      X O X X
+```
+
+Border 'O's: only `(3,1)` (all other edge cells are 'X'). `enqueue` marks a cell 'S' as it is pushed.
+
+| Step | Queue (front → back) | Dequeued | Neighbours checked → enqueued | Board 'S' cells so far |
+|------|----------------------|----------|-------------------------------|------------------------|
+| seed | [(3,1)] | — | (3,1) is border 'O' → mark 'S', push | (3,1) |
+| 1 | [] | (3,1) | (4,1)✗ oob, (2,1)='X', (3,2)='X', (3,0)='X' → none | (3,1) |
+
+Queue empties. The interior 'O's at `(1,1),(1,2),(2,2)` were never reached, so they stay 'O'. Final flip: those three 'O' → 'X' (captured); the single 'S' at `(3,1)` → 'O' (restored).
+
+```
+Output:  X X X X
+         X X X X
+         X X X X
+         X O X X
+```
+
+Same result as the DFS approach ✓.
 
 ---
 

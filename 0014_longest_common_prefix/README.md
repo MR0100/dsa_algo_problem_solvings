@@ -85,6 +85,41 @@ Start with `strs[0]` as the candidate prefix. For each subsequent string, shrink
 - **Time:** O(S) — in the worst case (all strings equal) we scan every character.
 - **Space:** O(1).
 
+### Code
+```go
+// horizontalScan starts with strs[0] as the prefix and progressively trims it
+// until it is a prefix of every subsequent string.
+//
+// Time:  O(S) where S = sum of all character lengths in strs.
+// Space: O(1) extra beyond the output.
+func horizontalScan(strs []string) string {
+	if len(strs) == 0 {
+		return ""
+	}
+	prefix := strs[0]
+	for _, s := range strs[1:] {
+		// Trim prefix from the right until it matches s's beginning.
+		for !strings.HasPrefix(s, prefix) {
+			prefix = prefix[:len(prefix)-1]
+			if prefix == "" {
+				return ""
+			}
+		}
+	}
+	return prefix
+}
+```
+
+### Dry Run — `strs = ["flower","flow","flight"]`
+`prefix` starts as `strs[0]` and is trimmed from the right until it prefixes each next string.
+
+| next string | prefix before | trimming steps (HasPrefix?) | prefix after |
+|-------------|---------------|-----------------------------|--------------|
+| `"flow"`    | `"flower"`    | "flow" HasPrefix "flower"? no → "flowe" no → "flow" yes | `"flow"` |
+| `"flight"`  | `"flow"`      | "flight" HasPrefix "flow"? no → "flo" no → "fl" yes | `"fl"` |
+
+All strings consumed → return `"fl"` ✓
+
 ---
 
 ## Approach 2 — Vertical Scanning (Recommended ✅)
@@ -137,6 +172,42 @@ After lexicographic sort, the first and last strings are maximally different. Th
 - **Time:** O(n log n) for sort + O(m) for comparison.
 - **Space:** O(1) extra (sort is in-place in Go).
 
+### Code
+```go
+// sortEndpoints sorts the slice lexicographically and compares only the
+// first and last strings — the LCP of all strings equals the LCP of these two.
+//
+// Time:  O(n log n) for the sort + O(m) for the comparison, where m = min length.
+// Space: O(1) extra (sort may be in-place depending on implementation).
+func sortEndpoints(strs []string) string {
+	if len(strs) == 0 {
+		return ""
+	}
+	sort.Strings(strs)
+	first, last := strs[0], strs[len(strs)-1]
+
+	i := 0
+	for i < len(first) && i < len(last) && first[i] == last[i] {
+		i++
+	}
+	return first[:i]
+}
+```
+
+### Dry Run — `strs = ["flower","flow","flight"]`
+```
+sort.Strings → ["flight","flow","flower"]
+first = "flight", last = "flower"
+```
+
+| i | first[i] | last[i] | equal? |
+|---|----------|---------|--------|
+| 0 | 'f'      | 'f'     | yes → i=1 |
+| 1 | 'l'      | 'l'     | yes → i=2 |
+| 2 | 'i'      | 'o'     | no → stop |
+
+Return `first[:2] = "fl"` ✓
+
 ---
 
 ## Approach 4 — Binary Search on Prefix Length
@@ -155,6 +226,63 @@ The LCP length lies in `[0, minLen]`. This range has a monotonic property: if le
 ### Complexity
 - **Time:** O(S log m) — O(log m) iterations × O(S/n per iter) ≈ O(S log m).
 - **Space:** O(1).
+
+### Code
+```go
+// binarySearchLen binary-searches the length of the LCP in range [0, minLen].
+// For a given length L, check if strs[0][:L] is a prefix of all strings.
+//
+// Time:  O(S log m) — O(log m) iterations × O(S/n) per check, where m = min length.
+// Space: O(1).
+func binarySearchLen(strs []string) string {
+	if len(strs) == 0 {
+		return ""
+	}
+
+	// Find the minimum string length to bound the search.
+	minLen := len(strs[0])
+	for _, s := range strs[1:] {
+		if len(s) < minLen {
+			minLen = len(s)
+		}
+	}
+
+	lo, hi := 0, minLen
+	for lo < hi {
+		mid := (lo + hi + 1) / 2 // bias up so we converge on the maximum valid length
+		if isCommonPrefix(strs, mid) {
+			lo = mid
+		} else {
+			hi = mid - 1
+		}
+	}
+	return strs[0][:lo]
+}
+
+// isCommonPrefix checks whether strs[0][:length] is a prefix of every string.
+func isCommonPrefix(strs []string, length int) bool {
+	prefix := strs[0][:length]
+	for _, s := range strs[1:] {
+		if !strings.HasPrefix(s, prefix) {
+			return false
+		}
+	}
+	return true
+}
+```
+
+### Dry Run — `strs = ["flower","flow","flight"]`
+```
+minLen = min(6,4,6) = 4  → search length range [0,4]
+```
+
+| lo | hi | mid=(lo+hi+1)/2 | isCommonPrefix(mid) → prefix strs[0][:mid] | move |
+|----|----|-----------------|--------------------------------------------|------|
+| 0  | 4  | 2 | "fl" prefix of "flow"✓, "flight"✓ → true | lo=2 |
+| 2  | 4  | 3 | "flo" prefix of "flow"✓, "flight"✗ → false | hi=2 |
+| 2  | 2  | — | lo==hi, loop ends | — |
+
+Return `strs[0][:2] = "fl"` ✓
 
 ---
 

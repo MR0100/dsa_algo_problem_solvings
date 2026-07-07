@@ -84,6 +84,25 @@ prepend 1
 - **Time:** O(n) worst case (e.g., `[9,9,...,9]`). O(1) amortised — most numbers end in non-9.
 - **Space:** O(n) worst case (extra element when all 9s); O(1) otherwise.
 
+### Code
+```go
+// plusOne solves Plus One by simulating addition from the least significant digit.
+//
+// Time:  O(n) worst case; O(1) amortised.
+// Space: O(n) worst case (new slice when all 9s); O(1) otherwise.
+func plusOne(digits []int) []int {
+	for i := len(digits) - 1; i >= 0; i-- {
+		if digits[i] < 9 {
+			digits[i]++
+			return digits
+		}
+		digits[i] = 0 // carry: 9+1=10, write 0
+	}
+	// all digits were 9 (e.g., [9,9] → [1,0,0])
+	return append([]int{1}, digits...)
+}
+```
+
 ### Dry Run — `digits = [1,9,9]`
 ```
 i=2: digits[2]=9 → digits[2]=0. carry.

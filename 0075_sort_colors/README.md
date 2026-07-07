@@ -75,6 +75,48 @@ Count the frequency of 0, 1, and 2. Overwrite the array: `count[0]` zeros, then 
 - **Time:** O(n) — two passes.
 - **Space:** O(1) — three-element count.
 
+### Code
+```go
+func countSort(nums []int) {
+	count := [3]int{}
+	for _, v := range nums {
+		count[v]++
+	}
+	i := 0
+	for color := 0; color <= 2; color++ {
+		for j := 0; j < count[color]; j++ {
+			nums[i] = color
+			i++
+		}
+	}
+}
+```
+
+### Dry Run — `nums = [2,0,2,1,1,0]`
+
+**Pass 1 — count each value:**
+
+| v (scanned) | count[0] | count[1] | count[2] |
+|-------------|----------|----------|----------|
+| 2           | 0        | 0        | 1        |
+| 0           | 1        | 0        | 1        |
+| 2           | 1        | 0        | 2        |
+| 1           | 1        | 1        | 2        |
+| 1           | 1        | 2        | 2        |
+| 0           | 2        | 2        | 2        |
+
+Final counts: `count = [2, 2, 2]`.
+
+**Pass 2 — overwrite** (`i` = write index):
+
+| color | writes | nums after            |
+|-------|--------|-----------------------|
+| 0     | 2 → i=0,1 | `[0,0,_,_,_,_]`    |
+| 1     | 2 → i=2,3 | `[0,0,1,1,_,_]`    |
+| 2     | 2 → i=4,5 | `[0,0,1,1,2,2]`    |
+
+Result: `[0,0,1,1,2,2]` ✓
+
 ---
 
 ## Approach 2 — Dutch National Flag (Recommended ✅)

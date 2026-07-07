@@ -82,6 +82,69 @@ Try each candidate at every position. Pass `start` to avoid generating permutati
 - **Time:** O(N^(T/M)) — branching factor N, depth T/M.
 - **Space:** O(T/M) — recursion depth.
 
+### Code
+```go
+func bruteForce(candidates []int, target int) [][]int {
+    var result [][]int
+    var dfs func(start, remaining int, path []int)
+    dfs = func(start, remaining int, path []int) {
+        if remaining == 0 {
+            tmp := make([]int, len(path))
+            copy(tmp, path)
+            result = append(result, tmp)
+            return
+        }
+        if remaining < 0 {
+            return
+        }
+        // try all candidates (allow repeats by not advancing start)
+        for i := start; i < len(candidates); i++ {
+            dfs(i, remaining-candidates[i], append(path, candidates[i]))
+        }
+    }
+    dfs(0, target, nil)
+    return result
+}
+```
+
+### Dry Run — `candidates = [2,3,6,7]`, `target = 7`
+No sorting and no `break`; each call recurses on every `i >= start` and only stops a branch when `remaining < 0` (overshoot) or `remaining == 0` (record). Indentation shows recursion depth.
+
+```
+dfs(0, 7, []):
+  i=0 (2): dfs(0, 5, [2]):
+    i=0 (2): dfs(0, 3, [2,2]):
+      i=0 (2): dfs(0, 1, [2,2,2]):
+        i=0 (2): dfs(0, -1, [2,2,2,2]): remaining<0 → prune
+        i=1 (3): dfs(1, -2, [2,2,2,3]): remaining<0 → prune
+        i=2 (6): dfs(2, -5, ...): remaining<0 → prune
+        i=3 (7): dfs(3, -6, ...): remaining<0 → prune
+      i=1 (3): dfs(1, 0, [2,2,3]): remaining=0 → record [2,2,3]
+      i=2 (6): dfs(2, -3, ...): remaining<0 → prune
+      i=3 (7): dfs(3, -4, ...): remaining<0 → prune
+    i=1 (3): dfs(1, 2, [2,3]):
+      i=1 (3): dfs(1, -1, ...): remaining<0 → prune
+      i=2 (6): dfs(2, -4, ...): remaining<0 → prune
+      i=3 (7): dfs(3, -5, ...): remaining<0 → prune
+    i=2 (6): dfs(2, -1, ...): remaining<0 → prune
+    i=3 (7): dfs(3, -2, ...): remaining<0 → prune
+  i=1 (3): dfs(1, 4, [3]):
+    i=1 (3): dfs(1, 1, [3,3]):
+      i=1 (3): dfs(1, -2, ...): remaining<0 → prune
+      i=2 (6): dfs(2, -5, ...): remaining<0 → prune
+      i=3 (7): dfs(3, -6, ...): remaining<0 → prune
+    i=2 (6): dfs(2, -2, ...): remaining<0 → prune
+    i=3 (7): dfs(3, -3, ...): remaining<0 → prune
+  i=2 (6): dfs(2, 1, [6]):
+    i=2 (6): dfs(2, -5, ...): remaining<0 → prune
+    i=3 (7): dfs(3, -6, ...): remaining<0 → prune
+  i=3 (7): dfs(3, 0, [7]): remaining=0 → record [7]
+
+Result: [[2,2,3],[7]] ✓
+```
+
+Note how, without the sorted `break`, this explores many overshoot branches (`remaining<0`) that Approach 2 skips.
+
 ---
 
 ## Approach 2 — Backtracking with Sort + Pruning (Recommended ✅)

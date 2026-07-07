@@ -66,6 +66,43 @@ Identical to #51 except we don't maintain or store the board — just increment 
 - **Time:** O(n!).
 - **Space:** O(n) — `cols`/`diag`/`anti` arrays + recursion stack.
 
+### Code
+```go
+func backtracking(n int) int {
+    count := 0
+    cols := make([]bool, n)
+    diag := make([]bool, 2*n)
+    anti := make([]bool, 2*n)
+
+    var bt func(row int)
+    bt = func(row int) {
+        if row == n {
+            count++
+            return
+        }
+        for c := 0; c < n; c++ {
+            dIdx := (row-c) + (n - 1)
+            aIdx := row + c
+            if cols[c] || diag[dIdx] || anti[aIdx] {
+                continue
+            }
+            cols[c] = true
+            diag[dIdx] = true
+            anti[aIdx] = true
+
+            bt(row + 1)
+
+            cols[c] = false
+            diag[dIdx] = false
+            anti[aIdx] = false
+        }
+    }
+
+    bt(0)
+    return count
+}
+```
+
 ### Dry Run — `n = 4`
 ```
 Total paths explored: starts at row 0, 4 column choices,

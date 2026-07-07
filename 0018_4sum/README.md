@@ -73,6 +73,44 @@ Try all O(n⁴) quadruplets. Deduplicate using a sorted 4-tuple as a map key.
 - **Time:** O(n⁴).
 - **Space:** O(n) — the dedup map.
 
+### Code
+```go
+func bruteForce(nums []int, target int) [][]int {
+    n := len(nums)
+    seen := make(map[[4]int]bool)
+    var result [][]int
+    for i := 0; i < n-3; i++ {
+        for j := i + 1; j < n-2; j++ {
+            for k := j + 1; k < n-1; k++ {
+                for l := k + 1; l < n; l++ {
+                    if nums[i]+nums[j]+nums[k]+nums[l] == target {
+                        quad := [4]int{nums[i], nums[j], nums[k], nums[l]}
+                        sort.Ints(quad[:])
+                        if !seen[quad] {
+                            seen[quad] = true
+                            result = append(result, []int{quad[0], quad[1], quad[2], quad[3]})
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return result
+}
+```
+
+### Dry Run — `nums = [1,0,-1,0,-2,2]`, `target = 0` (no sort)
+
+Indices `[1@0, 0@1, (-1)@2, 0@3, (-2)@4, 2@5]`. Only the zero-sum quadruplets are shown (the other C(6,4)=15 combinations fall through). Column order is discovery order in the `i<j<k<l` loops.
+
+| (i,j,k,l) values | sum | sorted quad | new? | result |
+|------------------|-----|-------------|------|--------|
+| (1, 0, -1, 0)  @(0,1,2,3) | 0 | [-1,0,0,1] | yes | [[-1,0,0,1]] |
+| (1, -1, -2, 2) @(0,2,4,5) | 0 | [-2,-1,1,2] | yes | [[-1,0,0,1],[-2,-1,1,2]] |
+| (0, 0, -2, 2)  @(1,3,4,5) | 0 | [-2,0,0,2] | yes | [[-1,0,0,1],[-2,-1,1,2],[-2,0,0,2]] |
+
+Final result set: `[[-1,0,0,1],[-2,-1,1,2],[-2,0,0,2]]` — same three unique quadruplets as Approach 2 (discovery order differs). ✓
+
 ---
 
 ## Approach 2 — Sort + Two Pointers (Recommended ✅)

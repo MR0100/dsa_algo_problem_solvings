@@ -76,12 +76,76 @@ Explanation: From the top-left corner, there are a total of 3 ways:
 - **Time:** O(m × n).
 - **Space:** O(m × n) — memo table + O(m+n) stack.
 
+### Code
+```go
+// memoization solves Unique Paths using top-down DP.
+//
+// Time:  O(m × n) — each cell computed once.
+// Space: O(m × n) — memo table + recursion stack.
+func memoization(m, n int) int {
+	memo := make([][]int, m)
+	for i := range memo {
+		memo[i] = make([]int, n)
+	}
+	var dp func(r, c int) int
+	dp = func(r, c int) int {
+		if r == m-1 || c == n-1 {
+			return 1 // bottom row or right column: only one way forward
+		}
+		if memo[r][c] != 0 {
+			return memo[r][c]
+		}
+		memo[r][c] = dp(r+1, c) + dp(r, c+1)
+		return memo[r][c]
+	}
+	return dp(0, 0)
+}
+```
+
+### Dry Run — `m = 3, n = 3`
+
+`dp(r,c)` recurses down-right; last row (r=2) or last col (c=2) returns 1. Values below are computed bottom-up as recursion unwinds and cached in `memo`.
+
+| cell (r,c) | computation | memo value |
+|------------|-------------|------------|
+| (2,·) / (·,2) | base case | 1 (returned, not stored) |
+| (1,1) | dp(2,1) + dp(1,2) = 1 + 1 | memo[1][1] = 2 |
+| (1,0) | dp(2,0) + dp(1,1) = 1 + 2 | memo[1][0] = 3 |
+| (0,1) | dp(1,1) + dp(0,2) = 2 + 1 | memo[0][1] = 3 |
+| (0,0) | dp(1,0) + dp(0,1) = 3 + 3 | memo[0][0] = **6** |
+
+`dp(0,0) = 6` ✓
+
 ---
 
 ## Approach 2 — DP 2D Table
 
 ### Intuition
 `dp[r][c]` = unique paths to (r,c). Initialize all border cells to 1 (only one way to reach them). Fill interior cells: `dp[r][c] = dp[r-1][c] + dp[r][c-1]`.
+
+### Code
+```go
+// dpBottomUp solves Unique Paths using a 2D DP table.
+//
+// Time:  O(m × n)
+// Space: O(m × n)
+func dpBottomUp(m, n int) int {
+	dp := make([][]int, m)
+	for i := range dp {
+		dp[i] = make([]int, n)
+		dp[i][0] = 1 // left column: only one path (all downs)
+	}
+	for j := 0; j < n; j++ {
+		dp[0][j] = 1 // top row: only one path (all rights)
+	}
+	for r := 1; r < m; r++ {
+		for c := 1; c < n; c++ {
+			dp[r][c] = dp[r-1][c] + dp[r][c-1]
+		}
+	}
+	return dp[m-1][n-1]
+}
+```
 
 ### Dry Run — `m=3, n=3`
 ```
@@ -108,6 +172,38 @@ Only the previous row is needed to compute the current row. Reuse one array: `dp
 ### Complexity
 - **Time:** O(m × n).
 - **Space:** O(n).
+
+### Code
+```go
+// dpRolling solves Unique Paths with O(n) space by reusing a single row array.
+//
+// Time:  O(m × n)
+// Space: O(n)
+func dpRolling(m, n int) int {
+	dp := make([]int, n)
+	for j := range dp {
+		dp[j] = 1 // top row: all 1s
+	}
+	for r := 1; r < m; r++ {
+		for c := 1; c < n; c++ {
+			dp[c] += dp[c-1] // dp[c] was "from above"; dp[c-1] is "from left"
+		}
+	}
+	return dp[n-1]
+}
+```
+
+### Dry Run — `m = 3, n = 3`
+
+Single array `dp` of length `n=3`, initialised to the top row (all 1s). Each subsequent row updates in place via `dp[c] += dp[c-1]` (old `dp[c]` = from above, updated `dp[c-1]` = from left).
+
+| after processing | dp = [dp[0], dp[1], dp[2]] |
+|------------------|-----------------------------|
+| init (row 0) | [1, 1, 1] |
+| row 1: c=1 → 1+1=2; c=2 → 1+2=3 | [1, 2, 3] |
+| row 2: c=1 → 2+1=3; c=2 → 3+3=6 | [1, 3, 6] |
+
+`dp[n-1] = dp[2] = 6` ✓
 
 ---
 

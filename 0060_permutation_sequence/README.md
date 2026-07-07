@@ -85,6 +85,64 @@ Backtrack to generate all n! permutations in lexicographic order, collect them i
 - **Time:** O(n! × n) — generates all permutations.
 - **Space:** O(n! × n).
 
+### Code
+```go
+// generateAll solves Permutation Sequence by generating all permutations in
+// lexicographic order and returning the k-th one.
+//
+// Time:  O(n! × n) — n! permutations, each of length n.
+// Space: O(n! × n)
+func generateAll(n, k int) string {
+	nums := make([]int, n)
+	for i := range nums {
+		nums[i] = i + 1
+	}
+	var result []string
+	visited := make([]bool, n)
+
+	var bt func(path []int)
+	bt = func(path []int) {
+		if len(path) == n {
+			parts := make([]string, n)
+			for i, v := range path {
+				parts[i] = strconv.Itoa(v)
+			}
+			result = append(result, strings.Join(parts, ""))
+			return
+		}
+		for i := 0; i < n; i++ {
+			if !visited[i] {
+				visited[i] = true
+				bt(append(path, nums[i]))
+				visited[i] = false
+			}
+		}
+	}
+
+	bt(nil)
+	return result[k-1]
+}
+```
+
+### Dry Run — `n = 4, k = 9`
+
+Backtracking picks the smallest unused digit first, so `result` fills in lexicographic order. Each completed `path` of length 4 is joined into a string and appended. We return `result[k-1] = result[8]`.
+
+| index into result | permutation string appended | notes |
+|-------------------|-----------------------------|-------|
+| 0 | "1234" | first leaf: 1,2,3,4 |
+| 1 | "1243" | |
+| 2 | "1324" | |
+| 3 | "1342" | |
+| 4 | "1423" | |
+| 5 | "1432" | last permutation starting with 1 (6 = 3! of them) |
+| 6 | "2134" | leading digit flips to 2 |
+| 7 | "2143" | |
+| **8** | **"2314"** | ← `result[k-1] = result[8]` returned |
+| 9 | "2341" | (generation continues but is unused) |
+
+Result: `result[8] = "2314"` ✓
+
 ---
 
 ## Approach 2 — Factorial Number System (Recommended ✅)

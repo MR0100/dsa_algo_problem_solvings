@@ -89,6 +89,46 @@ Collect every node's value into a slice, sort it, then build a new linked list. 
 - **Time:** O(N log N) — dominated by the sort.
 - **Space:** O(N) — values slice.
 
+### Code
+```go
+// bruteForce collects every node's value, sorts the slice, and builds a new list.
+//
+// Time:  O(N log N) where N = total nodes across all lists.
+// Space: O(N) — the values slice.
+func bruteForce(lists []*ListNode) *ListNode {
+	var vals []int
+	for _, head := range lists {
+		for head != nil {
+			vals = append(vals, head.Val)
+			head = head.Next
+		}
+	}
+	// Simple insertion sort to avoid importing sort (keeps imports clean).
+	for i := 1; i < len(vals); i++ {
+		for j := i; j > 0 && vals[j] < vals[j-1]; j-- {
+			vals[j], vals[j-1] = vals[j-1], vals[j]
+		}
+	}
+	dummy := &ListNode{}
+	cur := dummy
+	for _, v := range vals {
+		cur.Next = &ListNode{Val: v}
+		cur = cur.Next
+	}
+	return dummy.Next
+}
+```
+
+### Dry Run — `lists = [[1,4,5],[1,3,4],[2,6]]`
+
+| Step | Action | State |
+|------|--------|-------|
+| 1 | Walk L1, L2, L3 collecting values | `vals = [1,4,5, 1,3,4, 2,6]` |
+| 2 | Insertion-sort `vals` | `vals = [1,1,2,3,4,4,5,6]` |
+| 3 | Rebuild list node-by-node from sorted `vals` | `1→1→2→3→4→4→5→6` |
+
+**Result:** `[1,1,2,3,4,4,5,6]` ✓
+
 ---
 
 ## Approach 2 — Sequential Merge
@@ -102,6 +142,56 @@ If each list has N/k nodes, the i-th merge handles a list of size `i·(N/k)` and
 ### Complexity
 - **Time:** O(kN).
 - **Space:** O(1) — in-place relinking.
+
+### Code
+```go
+// sequentialMerge merges lists one at a time into a running result.
+//
+// Time:  O(k·N).
+// Space: O(1) — in-place relinking.
+func sequentialMerge(lists []*ListNode) *ListNode {
+	if len(lists) == 0 {
+		return nil
+	}
+	result := lists[0]
+	for i := 1; i < len(lists); i++ {
+		result = mergeTwoLists(result, lists[i])
+	}
+	return result
+}
+
+func mergeTwoLists(l1, l2 *ListNode) *ListNode {
+	dummy := &ListNode{}
+	cur := dummy
+	for l1 != nil && l2 != nil {
+		if l1.Val <= l2.Val {
+			cur.Next = l1
+			l1 = l1.Next
+		} else {
+			cur.Next = l2
+			l2 = l2.Next
+		}
+		cur = cur.Next
+	}
+	if l1 != nil {
+		cur.Next = l1
+	} else {
+		cur.Next = l2
+	}
+	return dummy.Next
+}
+```
+
+### Dry Run — `lists = [[1,4,5],[1,3,4],[2,6]]`
+Start with `result = lists[0]`, then fold in each remaining list via `mergeTwoLists`:
+
+| i | result (before) | lists[i] | result = merge(result, lists[i]) |
+|---|-----------------|----------|----------------------------------|
+| 0 | — | — | `1→4→5` (initial) |
+| 1 | `1→4→5` | `1→3→4` | `1→1→3→4→4→5` |
+| 2 | `1→1→3→4→4→5` | `2→6` | `1→1→2→3→4→4→5→6` |
+
+**Result:** `[1,1,2,3,4,4,5,6]` ✓
 
 ---
 
@@ -125,6 +215,31 @@ dnc(lists, lo, hi):
 ### Complexity
 - **Time:** O(N log k) — O(log k) rounds × O(N) per round.
 - **Space:** O(log k) — recursion depth.
+
+### Code
+```go
+// divideAndConquer pairs up lists and merges them in rounds until one remains.
+// (mergeTwoLists is shown in Approach 2's Code block above.)
+//
+// Time:  O(N log k) — optimal for this problem.
+// Space: O(log k) — recursion depth of the divide step.
+func divideAndConquer(lists []*ListNode) *ListNode {
+	if len(lists) == 0 {
+		return nil
+	}
+	return dnc(lists, 0, len(lists)-1)
+}
+
+func dnc(lists []*ListNode, lo, hi int) *ListNode {
+	if lo == hi {
+		return lists[lo]
+	}
+	mid := (lo + hi) / 2
+	left := dnc(lists, lo, mid)
+	right := dnc(lists, mid+1, hi)
+	return mergeTwoLists(left, right)
+}
+```
 
 ### Dry Run — `lists = [L1, L2, L3, L4]` (4 lists)
 ```

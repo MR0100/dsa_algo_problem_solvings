@@ -85,6 +85,45 @@ First pass: count the list length `L`. The n-th node from the end is the `(L-n+1
 - **Time:** O(L) — two passes.
 - **Space:** O(1).
 
+### Code
+```go
+// twoPass first counts the list length, then removes the (length-n)-th node
+// from the beginning (0-indexed).
+//
+// Time:  O(L) — two traversals of length L.
+// Space: O(1) — only pointer variables.
+func twoPass(head *ListNode, n int) *ListNode {
+	dummy := &ListNode{Next: head}
+
+	// First pass: count list length.
+	length := 0
+	for cur := head; cur != nil; cur = cur.Next {
+		length++
+	}
+
+	// Walk to the node just before the one to remove.
+	// We need to reach index (length - n) from the dummy head.
+	cur := dummy
+	for i := 0; i < length-n; i++ {
+		cur = cur.Next
+	}
+	cur.Next = cur.Next.Next // unlink the target node
+
+	return dummy.Next
+}
+```
+
+### Dry Run — `head = [1,2,3,4,5]`, `n = 2`
+
+`dummy → 1 → 2 → 3 → 4 → 5`.
+
+| Phase | Action | State |
+|-------|--------|-------|
+| Pass 1 | count nodes | `length = 5` |
+| Walk | advance `cur` from `dummy` by `length - n = 3` steps | `i=0`→node 1, `i=1`→node 2, `i=2`→node 3; `cur` at **node 3** |
+| Unlink | `cur.Next = cur.Next.Next` (node 3's `Next` goes 4 → 5) | node 4 removed |
+| Return | `dummy.Next` | **[1,2,3,5]** |
+
 ---
 
 ## Approach 2 — One-Pass with Two Pointers (Recommended ✅)

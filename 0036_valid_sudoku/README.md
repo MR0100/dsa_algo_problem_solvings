@@ -92,6 +92,81 @@ Validate rows, columns, and boxes in three separate loops. Each loop uses a bool
 - **Time:** O(81 × 3) = O(1).
 - **Space:** O(9) per check = O(1).
 
+### Code
+```go
+func threePasses(board [][]byte) bool {
+    // check all rows
+    for r := 0; r < 9; r++ {
+        seen := [10]bool{}
+        for c := 0; c < 9; c++ {
+            if board[r][c] == '.' {
+                continue
+            }
+            d := board[r][c] - '0'
+            if seen[d] {
+                return false
+            }
+            seen[d] = true
+        }
+    }
+    // check all columns
+    for c := 0; c < 9; c++ {
+        seen := [10]bool{}
+        for r := 0; r < 9; r++ {
+            if board[r][c] == '.' {
+                continue
+            }
+            d := board[r][c] - '0'
+            if seen[d] {
+                return false
+            }
+            seen[d] = true
+        }
+    }
+    // check all 3×3 boxes
+    for boxRow := 0; boxRow < 3; boxRow++ {
+        for boxCol := 0; boxCol < 3; boxCol++ {
+            seen := [10]bool{}
+            for r := boxRow * 3; r < boxRow*3+3; r++ {
+                for c := boxCol * 3; c < boxCol*3+3; c++ {
+                    if board[r][c] == '.' {
+                        continue
+                    }
+                    d := board[r][c] - '0'
+                    if seen[d] {
+                        return false
+                    }
+                    seen[d] = true
+                }
+            }
+        }
+    }
+    return true
+}
+```
+
+### Dry Run — Example 1 (valid board)
+Each pass resets `seen[10]` per row/column/box and returns `false` on the first repeat. On the valid board every pass completes with no repeat, so the function returns `true`.
+
+**Pass 1 — rows.** Row 0 = `5 3 . . 7 . . . .`:
+
+| c | cell | d | seen[d] before | action |
+|---|------|---|----------------|--------|
+| 0 | 5 | 5 | false | mark seen[5] |
+| 1 | 3 | 3 | false | mark seen[3] |
+| 2 | . | — | —     | skip |
+| 3 | . | — | —     | skip |
+| 4 | 7 | 7 | false | mark seen[7] |
+| 5–8 | . | — | —   | skip |
+
+Row 0 has no repeat; rows 1–8 likewise pass.
+
+**Pass 2 — columns.** Column 0 = `5 6 . 8 4 7 . . .` → digits {5,6,8,4,7}, all distinct → pass. Columns 1–8 likewise pass.
+
+**Pass 3 — boxes.** Box 0 (rows 0–2, cols 0–2) = `5 3 . / 6 . . / . 9 8` → digits {5,3,6,9,8}, all distinct → pass. Boxes 1–8 likewise pass.
+
+All three passes finish without a repeat → return `true` ✓.
+
 ---
 
 ## Approach 2 — Single Pass (Recommended ✅)

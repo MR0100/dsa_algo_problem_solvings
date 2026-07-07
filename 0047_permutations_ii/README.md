@@ -67,6 +67,50 @@ Generate all permutations (same as #46) and store unique ones in a string-keyed 
 - **Time:** O(n! × n).
 - **Space:** O(n! × n).
 
+### Code
+```go
+func bruteForce(nums []int) [][]int {
+    seen := map[string]bool{}
+    var result [][]int
+    visited := make([]bool, len(nums))
+    var bt func(path []int)
+    bt = func(path []int) {
+        if len(path) == len(nums) {
+            key := fmt.Sprint(path)
+            if !seen[key] {
+                seen[key] = true
+                tmp := make([]int, len(nums))
+                copy(tmp, path)
+                result = append(result, tmp)
+            }
+            return
+        }
+        for i := 0; i < len(nums); i++ {
+            if !visited[i] {
+                visited[i] = true
+                bt(append(path, nums[i]))
+                visited[i] = false
+            }
+        }
+    }
+    bt(nil)
+    return result
+}
+```
+
+### Dry Run — `nums = [1,1,2]` (no sort; dedup via `seen` map)
+| Full path reached | `key` | In `seen`? | Action |
+|-------------------|-------|------------|--------|
+| [1,1,2] (idx 0,1,2) | "[1 1 2]" | no | add → record [1,1,2] |
+| [1,2,1] (idx 0,2,1) | "[1 2 1]" | no | add → record [1,2,1] |
+| [1,1,2] (idx 1,0,2) | "[1 1 2]" | yes | skip (duplicate) |
+| [1,2,1] (idx 1,2,0) | "[1 2 1]" | yes | skip |
+| [2,1,1] (idx 2,0,1) | "[2 1 1]" | no | add → record [2,1,1] |
+| [2,1,1] (idx 2,1,0) | "[2 1 1]" | yes | skip |
+
+All 3! = 6 leaves are visited; the map keeps only the 3 unique ones.
+Result: [[1,1,2],[1,2,1],[2,1,1]] count=3 ✓
+
 ---
 
 ## Approach 2 — Backtracking with Skip-Dup Pruning (Recommended ✅)

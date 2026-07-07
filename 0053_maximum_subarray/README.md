@@ -80,6 +80,37 @@ Try every subarray `nums[i..j]`, accumulate sum incrementally, track the maximum
 - **Time:** O(n²).
 - **Space:** O(1).
 
+### Code
+```go
+func bruteForce(nums []int) int {
+    best := math.MinInt64
+    for i := 0; i < len(nums); i++ {
+        sum := 0
+        for j := i; j < len(nums); j++ {
+            sum += nums[j]
+            if sum > best {
+                best = sum
+            }
+        }
+    }
+    return best
+}
+```
+
+### Dry Run — `nums = [-2,1,-3,4,-1,2,1,-5,4]`
+
+Each outer `i` restarts `sum=0` and extends `j` from `i` to the end, tracking the best sum seen. Showing the running `sum` for a few representative starting points and the global `best`:
+
+| i (start) | sums as j advances (`nums[i..j]`)                              | max for this i | global best |
+|-----------|----------------------------------------------------------------|----------------|-------------|
+| 0         | -2, -1, -4, 0, -1, 1, 2, -3, 1                                  | 2              | 2           |
+| 1         | 1, -2, 2, 1, 3, 4, -1, 3                                        | 4              | 4           |
+| 3         | 4, 3, 5, **6**, 1, 5                                            | **6**          | **6**       |
+| 4         | -1, 1, 2, -3, 1                                                 | 2              | 6           |
+| 8         | 4                                                               | 4              | 6           |
+
+The best over all starting points is 6, achieved by `i=3` extending to `j=6` (subarray `[4,-1,2,1]`). Result: 6 ✓
+
 ---
 
 ## Approach 2 — Kadane's Algorithm (Recommended ✅)
@@ -162,6 +193,69 @@ maxCross(lo, mid, hi):
 - **Time:** O(n log n) — `T(n) = 2T(n/2) + O(n)`, Master theorem case 2.
 - **Space:** O(log n) — recursion stack depth.
 
+### Code
+```go
+func divideAndConquer(nums []int) int {
+    return dac(nums, 0, len(nums)-1)
+}
+
+func dac(nums []int, lo, hi int) int {
+    if lo == hi {
+        return nums[lo]
+    }
+    mid := (lo + hi) / 2
+    left := dac(nums, lo, mid)
+    right := dac(nums, mid+1, hi)
+    cross := maxCross(nums, lo, mid, hi)
+    return max3(left, right, cross)
+}
+
+// maxCross computes the max subarray sum that crosses mid.
+func maxCross(nums []int, lo, mid, hi int) int {
+    leftSum := math.MinInt64
+    sum := 0
+    for i := mid; i >= lo; i-- { // expand left from mid
+        sum += nums[i]
+        if sum > leftSum {
+            leftSum = sum
+        }
+    }
+    rightSum := math.MinInt64
+    sum = 0
+    for i := mid + 1; i <= hi; i++ { // expand right from mid+1
+        sum += nums[i]
+        if sum > rightSum {
+            rightSum = sum
+        }
+    }
+    return leftSum + rightSum
+}
+
+func max3(a, b, c int) int {
+    if a >= b && a >= c {
+        return a
+    }
+    if b >= c {
+        return b
+    }
+    return c
+}
+```
+
+### Dry Run — `nums = [-2,1,-3,4,-1,2,1,-5,4]` (indices 0..8)
+
+`dac(lo,hi)` splits at `mid=(lo+hi)/2` and returns `max(left, right, cross)`. Tracing the top-level call and its key recursions:
+
+| Call `dac(lo,hi)` | mid | left | right | cross (`maxCross`) | returns |
+|-------------------|-----|------|-------|--------------------|---------|
+| dac(0,8)          | 4   | 4 (from 0..4) | 4 (from 5..8) | **6** (arms across mid=4) | **6** |
+| ↳ dac(0,4)        | 2   | 1 (0..2) | 4 (3..4) | 4 | 4 |
+| ↳ dac(5,8)        | 6   | 3 (5..6) | 4 (7..8) | 2 | 4 |
+| ↳ dac(3,4)        | 3   | 4 (nums[3]) | -1 (nums[4]) | 3 | 4 |
+| ↳ dac(5,6)        | 5   | 2 (nums[5]) | 1 (nums[6]) | 3 | 3 |
+
+The winner is the **crossing** subarray of the top call. `maxCross(0,4,8)` around `mid=4`: the left arm expands down from index 4 and its best is `nums[3..4]=[4,-1]` = 3; the right arm expands up from index 5 and its best is `nums[5..6]=[2,1]` = 3. Sum of arms = 3 + 3 = 6, the subarray `[4,-1,2,1]`. The top call returns `max(4, 4, 6) = 6`. Result: 6 ✓
+
 ---
 
 ## Approach 4 — DP Bottom-Up
@@ -178,6 +272,45 @@ This is equivalent to Kadane's but stores all dp values explicitly (reducible to
 ### Complexity
 - **Time:** O(n).
 - **Space:** O(n) — reducible to O(1) by using a single variable.
+
+### Code
+```go
+func dpBottomUp(nums []int) int {
+    n := len(nums)
+    dp := make([]int, n)
+    dp[0] = nums[0]
+    best := dp[0]
+    for i := 1; i < n; i++ {
+        if dp[i-1]+nums[i] > nums[i] {
+            dp[i] = dp[i-1] + nums[i]
+        } else {
+            dp[i] = nums[i]
+        }
+        if dp[i] > best {
+            best = dp[i]
+        }
+    }
+    return best
+}
+```
+
+### Dry Run — `nums = [-2,1,-3,4,-1,2,1,-5,4]`
+
+`dp[i] = max(nums[i], dp[i-1] + nums[i])`; `best = max(dp)`.
+
+| i | nums[i] | dp[i-1] | dp[i-1]+nums[i] | dp[i] = max(nums[i], dp[i-1]+nums[i]) | best |
+|---|---------|---------|-----------------|---------------------------------------|------|
+| 0 | -2      | —       | —               | -2                                    | -2   |
+| 1 | 1       | -2      | -1              | 1                                     | 1    |
+| 2 | -3      | 1       | -2              | -2                                    | 1    |
+| 3 | 4       | -2      | 2               | 4                                     | 4    |
+| 4 | -1      | 4       | 3               | 3                                     | 4    |
+| 5 | 2       | 3       | 5               | 5                                     | 5    |
+| 6 | 1       | 5       | 6               | 6                                     | **6**|
+| 7 | -5      | 6       | 1               | 1                                     | 6    |
+| 8 | 4       | 1       | 5               | 5                                     | 6    |
+
+Max `dp[i]` is 6 at `i=6` (subarray `[4,-1,2,1]`). Result: 6 ✓
 
 ---
 

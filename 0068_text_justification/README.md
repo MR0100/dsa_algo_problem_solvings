@@ -99,6 +99,72 @@ while i < n:
 - **Time:** O(n × maxWidth) — n words, each line build is O(maxWidth).
 - **Space:** O(maxWidth) — one line buffer at a time (output not counted).
 
+### Code
+```go
+// fullJustify solves Text Justification by greedily packing words onto lines,
+// then distributing spaces according to the justification rules.
+//
+// Time:  O(n × maxWidth)
+// Space: O(maxWidth) per line; O(total output) overall.
+func fullJustify(words []string, maxWidth int) []string {
+	var result []string
+	i := 0
+	n := len(words)
+
+	for i < n {
+		// pack as many words as possible onto this line
+		lineLen := len(words[i])
+		j := i + 1
+		for j < n && lineLen+1+len(words[j]) <= maxWidth {
+			lineLen += 1 + len(words[j])
+			j++
+		}
+		// words[i..j-1] go on this line
+		numWords := j - i
+		numGaps := numWords - 1
+
+		var line strings.Builder
+		line.WriteString(words[i])
+
+		if j == n || numWords == 1 {
+			// last line or single word: left-justify (single spaces + pad right)
+			for k := i + 1; k < j; k++ {
+				line.WriteByte(' ')
+				line.WriteString(words[k])
+			}
+			// pad with spaces on the right
+			for line.Len() < maxWidth {
+				line.WriteByte(' ')
+			}
+		} else {
+			// regular line: distribute spaces evenly
+			totalSpaces := maxWidth
+			for k := i; k < j; k++ {
+				totalSpaces -= len(words[k])
+			}
+			spacePerGap := totalSpaces / numGaps
+			extraSpaces := totalSpaces % numGaps // first extraSpaces gaps get one extra
+
+			for k := 1; k < numWords; k++ {
+				spaces := spacePerGap
+				if k-1 < extraSpaces {
+					spaces++ // distribute extra spaces left to right
+				}
+				for s := 0; s < spaces; s++ {
+					line.WriteByte(' ')
+				}
+				line.WriteString(words[i+k])
+			}
+		}
+
+		result = append(result, line.String())
+		i = j
+	}
+
+	return result
+}
+```
+
 ### Dry Run — `words = ["This","is","an","example","of","text","justification."]`, `maxWidth = 16`
 ```
 Line 1: "This" (4), "is" (2), "an" (2) → 4+1+2+1+2=10 ≤ 16.

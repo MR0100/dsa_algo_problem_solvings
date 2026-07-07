@@ -70,6 +70,34 @@ Increment `k` until `k² > x`, then return `k-1`.
 - **Time:** O(√x) — up to ~46,341 iterations for x = 2³¹-1.
 - **Space:** O(1).
 
+### Code
+```go
+// linearScan solves Sqrt(x) by trying each integer from 0 upward.
+//
+// Time:  O(√x)
+// Space: O(1)
+func linearScan(x int) int {
+	if x == 0 {
+		return 0
+	}
+	k := 1
+	for k*k <= x {
+		k++
+	}
+	return k - 1 // last k where k²<=x
+}
+```
+
+### Dry Run — `x = 8`
+
+| k | k*k | k*k <= 8? | action |
+|---|-----|-----------|--------|
+| 1 | 1 | yes | k++ → 2 |
+| 2 | 4 | yes | k++ → 3 |
+| 3 | 9 | no | stop |
+
+Loop exits with `k = 3`; return `k - 1 = 2` ✓
+
 ---
 
 ## Approach 2 — Binary Search (Recommended ✅)
@@ -142,6 +170,17 @@ func newtonMethod(x int) int {
 ### Complexity
 - **Time:** O(log x) — quadratic convergence in practice is very fast.
 - **Space:** O(1).
+
+### Dry Run — `x = 8`
+
+| step | r | r*r | r*r > 8? | update r = (r + x/r)/2 |
+|------|---|-----|----------|-------------------------|
+| init | 8 | 64 | yes | (8 + 8/8)/2 = (8+1)/2 = 4 |
+| 1 | 4 | 16 | yes | (4 + 8/4)/2 = (4+2)/2 = 3 |
+| 2 | 3 | 9 | yes | (3 + 8/3)/2 = (3+2)/2 = 2 |
+| 3 | 2 | 4 | no | stop |
+
+Loop exits with `r = 2`; return `2` ✓
 
 ---
 
